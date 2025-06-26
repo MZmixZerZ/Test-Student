@@ -90,7 +90,6 @@ export class PersonListComponent {
                 if (this.matDrawer && this.matDrawer.opened) {
                     this.matDrawer.close();
                 }
-                // ไม่ต้อง fetchData ที่นี่ เพราะ service จะ refresh ให้เอง
             }
         });
 
@@ -136,7 +135,6 @@ export class PersonListComponent {
                             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
                             .subscribe(() => {
                                 this._fuseConfirmationService.alertSuccess();
-                                // ไม่ต้อง fetchData ที่นี่ เพราะ service จะ refresh ให้เอง
                             });
                     }
                 });

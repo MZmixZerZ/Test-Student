@@ -125,7 +125,7 @@ export class EditPersonComponent implements OnInit {
                 next: () => {
                     this._fuseConfirmationService.alertSuccess();
                     this.disableSave = false;
-                    // กลับไปหน้าหลัก persons หลังบันทึกสำเร็จ
+                    // กลับไปหน้า list หลักของ person หลังบันทึกสำเร็จ
                     this._router.navigate(['../../'], { relativeTo: this._route });
                 },
                 error: (err) => {
@@ -144,7 +144,7 @@ export class EditPersonComponent implements OnInit {
                 next: () => {
                     this._fuseConfirmationService.alertSuccess();
                     this.disableSave = false;
-                    // กลับไปหน้าหลัก persons หลังบันทึกสำเร็จ
+                    // กลับไปหน้า list หลักของ person หลังบันทึกสำเร็จ
                     this._router.navigate(['../../'], { relativeTo: this._route });
                 },
                 error: (err) => {
