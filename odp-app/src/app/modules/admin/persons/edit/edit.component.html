@@ -65,12 +65,8 @@
             <mat-divider></mat-divider>
 
             <div class="flex items-center justify-end p-4 gap-x-4">
-                <button mat-button (click)="onClose()" name="cancel">
-                    ยกเลิก
-                </button>
-                <button mat-flat-button color="primary" [disabled]="initForm.invalid || disableSave" (click)="onSave()" name="save">
-                    บันทึก
-                </button>
+                <button mat-button (click)="onClose()">ยกเลิก</button>
+                <button mat-flat-button color="primary" (click)="onSave()">บันทึก</button>
             </div>
         </form>
     </div>

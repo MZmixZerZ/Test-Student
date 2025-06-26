@@ -98,12 +98,14 @@ export class PersonListComponent {
         this._router.navigate(['create'], {
             relativeTo: this._activatedRoute,
         });
+        setTimeout(() => this.matDrawer.open(), 100);
     }
 
     onOpenEdit(id: string): void {
         this._router.navigate(['edit', id], {
             relativeTo: this._activatedRoute,
         });
+        setTimeout(() => this.matDrawer.open(), 100);
     }
 
     onEdit(person: Person): void {

@@ -26,6 +26,7 @@ import { Person } from 'app/core/person/person.type';
 import { CreatePersonDto } from 'app/core/person/dto/create-person.dto';
 import { UpdatePersonDto } from 'app/core/person/dto/update-person.dto';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { PersonListComponent } from '../list/list.component';
 
 @Component({
     selector: 'app-edit-person',
@@ -67,7 +68,8 @@ export class EditPersonComponent implements OnInit {
         private _route: ActivatedRoute,
         private _personService: PersonService,
         private _fuseConfirmationService: FuseConfirmationService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private parent: PersonListComponent
     ) {
         this.personId = this._route.snapshot.paramMap.get('id');
         this.isEdit = !!this.personId;
