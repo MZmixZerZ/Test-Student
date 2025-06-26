@@ -26,7 +26,6 @@ import { Person } from 'app/core/person/person.type';
 import { CreatePersonDto } from 'app/core/person/dto/create-person.dto';
 import { UpdatePersonDto } from 'app/core/person/dto/update-person.dto';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import { PersonListComponent } from '../list/list.component';
 
 @Component({
     selector: 'app-edit-person',
@@ -68,8 +67,7 @@ export class EditPersonComponent implements OnInit {
         private _route: ActivatedRoute,
         private _personService: PersonService,
         private _fuseConfirmationService: FuseConfirmationService,
-        private cdr: ChangeDetectorRef,
-        private parent: PersonListComponent
+        private cdr: ChangeDetectorRef
     ) {
         this.personId = this._route.snapshot.paramMap.get('id');
         this.isEdit = !!this.personId;
@@ -125,13 +123,15 @@ export class EditPersonComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
                 next: () => {
-                    this._router.navigate(['../'], { relativeTo: this._route });
                     this._fuseConfirmationService.alertSuccess();
                     this.disableSave = false;
+                    // กลับไปหน้าหลัก persons หลังบันทึกสำเร็จ
+                    this._router.navigate(['../../'], { relativeTo: this._route });
                 },
-                error: () => {
+                error: (err) => {
                     this.disableSave = false;
                     this.cdr.detectChanges();
+                    this._fuseConfirmationService.alertError(err?.error?.message || 'เกิดข้อผิดพลาด');
                 },
             });
     }
@@ -142,23 +142,21 @@ export class EditPersonComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
                 next: () => {
-                    this._router.navigate(['../../'], { relativeTo: this._route });
                     this._fuseConfirmationService.alertSuccess();
                     this.disableSave = false;
+                    // กลับไปหน้าหลัก persons หลังบันทึกสำเร็จ
+                    this._router.navigate(['../../'], { relativeTo: this._route });
                 },
-                error: () => {
+                error: (err) => {
                     this.disableSave = false;
                     this.cdr.detectChanges();
+                    this._fuseConfirmationService.alertError(err?.error?.message || 'เกิดข้อผิดพลาด');
                 },
             });
     }
 
-    onClose(): void {
-        if (this.isEdit) {
-            this._router.navigate(['../../'], { relativeTo: this._route });
-        } else {
-            this._router.navigate(['../'], { relativeTo: this._route });
-        }
+    onClose() {
+        this._router.navigate(['../'], { relativeTo: this._route });
     }
 
     closeDrawer(): Promise<void> {

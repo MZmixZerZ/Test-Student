@@ -15,14 +15,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, NavigationEnd } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { PersonService } from 'app/core/person/person.service';
 import { Person } from 'app/core/person/person.type';
 import { GetPersonParameter } from 'app/core/person/parameters/get-person.parameter';
 import { DEF_LIMIT, Page, SortType } from 'app/core/base/page.type';
 import { PageResponse } from 'app/core/base/pageResponse.types';
-import { Observable, Subject, debounceTime, takeUntil } from 'rxjs';
+import { Observable, Subject, debounceTime, takeUntil, filter } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -53,7 +53,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     styleUrl: './list.component.scss',
 })
 export class PersonListComponent {
-    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
+    @ViewChild('matDrawer') matDrawer!: MatDrawer;
 
     isShowReset: boolean = false;
     showLoading = {
@@ -83,6 +83,17 @@ export class PersonListComponent {
         private _personService: PersonService,
         private _fuseConfirmationService: FuseConfirmationService
     ) {
+        this._router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe((event: NavigationEnd) => {
+            if (event.urlAfterRedirects.endsWith('/persons')) {
+                if (this.matDrawer && this.matDrawer.opened) {
+                    this.matDrawer.close();
+                }
+                // ไม่ต้อง fetchData ที่นี่ เพราะ service จะ refresh ให้เอง
+            }
+        });
+
         this.persons$ = this._personService.personLists$.pipe(
             takeUntil(this._unsubscribeAll),
             debounceTime(300)
@@ -91,7 +102,6 @@ export class PersonListComponent {
 
     ngOnInit(): void {
         this.fetchData();
-        // ไม่ต้อง subscribe กับ persons$ ที่นี่ เพราะ async pipe จะจัดการให้ใน template
     }
 
     onOpenCreate(): void {
@@ -121,20 +131,16 @@ export class PersonListComponent {
                 .afterClosed()
                 .subscribe((result: boolean) => {
                     if (result) {
-                        this.deletePerson(person.id);
+                        this._personService
+                            .delete(person.id)
+                            .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
+                            .subscribe(() => {
+                                this._fuseConfirmationService.alertSuccess();
+                                // ไม่ต้อง fetchData ที่นี่ เพราะ service จะ refresh ให้เอง
+                            });
                     }
                 });
         }
-    }
-
-    deletePerson(id: string): void {
-        this._personService
-            .delete(id)
-            .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
-            .subscribe(() => {
-                this.fetchData();
-                this._fuseConfirmationService.alertSuccess();
-            });
     }
 
     onChangePage(event: PageEvent): void {

@@ -1,29 +1,24 @@
 import { Routes } from '@angular/router';
 import { CanDeactivateUserEdit } from './person.guard';
 import { personResolver } from './person.resolver';
-import { PersonComponent } from './person.component';
-import { EditPersonComponent } from './edit/edit.component';
-import { PersonListComponent } from './list/list.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: PersonListComponent,
-        children: [
-            {
-                path: 'create',
-                component: EditPersonComponent,
-                canDeactivate: [CanDeactivateUserEdit],
-                data: { mode: 'create' }
-            },
-            {
-                path: 'edit/:id',
-                component: EditPersonComponent,
-                resolve: { initialData: personResolver },
-                canDeactivate: [CanDeactivateUserEdit],
-                data: { mode: 'edit' }
-            }
-        ]
+        loadComponent: () => import('./list/list.component').then(m => m.PersonListComponent)
+    },
+    {
+        path: 'create',
+        loadComponent: () => import('./edit/edit.component').then(m => m.EditPersonComponent),
+        canDeactivate: [CanDeactivateUserEdit],
+        data: { mode: 'create' }
+    },
+    {
+        path: 'edit/:id',
+        loadComponent: () => import('./edit/edit.component').then(m => m.EditPersonComponent),
+        resolve: { initialData: personResolver },
+        canDeactivate: [CanDeactivateUserEdit],
+        data: { mode: 'edit' }
     }
 ];
 

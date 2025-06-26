@@ -126,7 +126,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'persons',
                 loadChildren: () =>
-                    import('app/modules/admin/persons/person.routes'),
+                    import('app/modules/admin/persons/person.routes').then(m => m.default),
             },
             {
                 path: 'report',

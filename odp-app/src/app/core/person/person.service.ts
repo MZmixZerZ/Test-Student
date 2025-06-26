@@ -57,6 +57,8 @@ export class PersonService {
                         address: p.address ?? '',
                     }));
                 }
+                // เก็บ search param ล่าสุดไว้ใน response
+                (personResp as any)._searchParam = param;
                 this._personLists.next(personResp);
             })
         );
@@ -87,14 +89,36 @@ export class PersonService {
     }
 
     create(body: CreatePersonDto): Observable<Person> {
-        return this._httpClient.post<Person>(this.apiUrl.personUrl, body);
+        return this._httpClient.post<Person>(this.apiUrl.personUrl, body).pipe(
+            tap(() => {
+                // หลังสร้างข้อมูลใหม่ ให้รีเฟรชรายการ
+                this.refreshPersonLists();
+            })
+        );
     }
 
     update(id: string, body: UpdatePersonDto): Observable<Person> {
-        return this._httpClient.put<Person>(this.apiUrl.personWithIdUrl(id), body);
+        return this._httpClient.put<Person>(this.apiUrl.personWithIdUrl(id), body).pipe(
+            tap(() => {
+                // หลังอัปเดตข้อมูล ให้รีเฟรชรายการ
+                this.refreshPersonLists();
+            })
+        );
     }
 
     delete(id: string): Observable<any> {
-        return this._httpClient.delete(this.apiUrl.personWithIdUrl(id));
+        return this._httpClient.delete(this.apiUrl.personWithIdUrl(id)).pipe(
+            tap(() => {
+                // หลังลบข้อมูล ให้รีเฟรชรายการ
+                this.refreshPersonLists();
+            })
+        );
+    }
+
+    refreshPersonLists(): void {
+        const lastValue = this._personLists.value;
+        if (lastValue && (lastValue as any)._searchParam) {
+            this.getPersonLists((lastValue as any)._searchParam).subscribe();
+        }
     }
 }
