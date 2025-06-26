@@ -1,109 +1,97 @@
 <div class="absolute inset-0 flex overflow-hidden">
-    <mat-drawer-container>
-        <!-- Drawer -->
-        <mat-drawer #matDrawer [opened]="false" mode="over" position="end">
-            <router-outlet></router-outlet>
-        </mat-drawer>
+  <mat-drawer-container>
+    <!-- Drawer -->
+    <mat-drawer #matDrawer [opened]="false" mode="over" position="end">
+      <router-outlet></router-outlet>
+    </mat-drawer>
 
-        <mat-drawer-content>
-            <div class="flex flex-wrap gap-4 text-3xl">
-                <div class="flex flex-initial items-center gap-x-2">
-                    <div class="font-mono text-4xl font-semibold text-primary opacity-80">
-                        ข้อมูลนักเรียน
+    <mat-drawer-content>
+      <div class="flex flex-wrap items-center justify-between mb-6">
+        <div class="flex gap-4 flex-wrap">
+          <mat-form-field>
+            <mat-label>ค้นหาชื่อจริง</mat-label>
+            <input matInput [(ngModel)]="searchName" placeholder="ชื่อจริง">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>ค้นหานามสกุล</mat-label>
+            <input matInput [(ngModel)]="searchSurname" placeholder="นามสกุล">
+          </mat-form-field>
+          <button mat-flat-button color="primary" (click)="onSearch()">ค้นหา</button>
+          <button mat-button (click)="onReset()" *ngIf="isShowReset">ล้าง</button>
+        </div>
+        <button mat-flat-button color="accent" class="rounded-lg py-2 px-6 font-bold" (click)="onOpenCreate()">
+          <mat-icon>add</mat-icon>
+          เพิ่มข้อมูล
+        </button>
+      </div>
+
+      <div class="flex justify-center w-full">
+        <div class="table-container">
+          <ng-container *ngIf="(persons$ | async) as personResp">
+            <div class="sm:overflow-visible overflow-x-auto w-full">
+              <table mat-table [dataSource]="personResp.items || []" class="mat-elevation-z8 w-full">
+                <ng-container matColumnDef="n_id">
+                  <th mat-header-cell *matHeaderCellDef> เลขบัตรประชาชน </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.n_id }} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> ชื่อจริง </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.name }} </td>
+                </ng-container>
+                <ng-container matColumnDef="surname">
+                  <th mat-header-cell *matHeaderCellDef> นามสกุล </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.surname }} </td>
+                </ng-container>
+                <ng-container matColumnDef="dob">
+                  <th mat-header-cell *matHeaderCellDef> วันเกิด </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.dob | date:'dd/MM/yyyy' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="phone">
+                  <th mat-header-cell *matHeaderCellDef> เบอร์โทร </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.phone }} </td>
+                </ng-container>
+                <ng-container matColumnDef="nationality">
+                  <th mat-header-cell *matHeaderCellDef> สัญชาติ </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.nationality }} </td>
+                </ng-container>
+                <ng-container matColumnDef="citizen">
+                  <th mat-header-cell *matHeaderCellDef> เชื้อชาติ </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.citizen }} </td>
+                </ng-container>
+                <ng-container matColumnDef="religion">
+                  <th mat-header-cell *matHeaderCellDef> ศาสนา </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.religion }} </td>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef> ที่อยู่ </th>
+                  <td mat-cell *matCellDef="let person"> {{ person.address }} </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> จัดการ </th>
+                  <td mat-cell *matCellDef="let person">
+                    <div class="table-actions">
+                      <button mat-icon-button color="primary" (click)="onEdit(person)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="onDelete(person)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </div>
-                </div>
+                  </td>
+                </ng-container>
 
-                <div class="flex flex-auto items-center justify-end gap-x-2">
-                    <div class="w-auto">
-                        <button mat-flat-button class="ml-4 w-auto bg-[#22c55e] rounded-lg text-white"
-                            (click)="onOpenCreate()" name="create_person">
-                            <span class="ml-2 mr-1">เพิ่มข้อมูล</span>
-                        </button>
-                    </div>
-                </div>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator [length]="personResp.total || 0"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[10, 20, 50]"
+                             (page)="onChangePage($event)">
+              </mat-paginator>
             </div>
-            <mat-divider></mat-divider>
-
-            <div class="flex flex-row gap-4 mb-4">
-                <mat-form-field class="flex-1">
-                    <mat-label>ค้นหาชื่อจริง</mat-label>
-                    <input matInput [(ngModel)]="searchName" (keyup.enter)="onSearch()" placeholder="ชื่อจริง">
-                </mat-form-field>
-                <mat-form-field class="flex-1">
-                    <mat-label>ค้นหานามสกุล</mat-label>
-                    <input matInput [(ngModel)]="searchSurname" (keyup.enter)="onSearch()" placeholder="นามสกุล">
-                </mat-form-field>
-                <button mat-flat-button color="primary" (click)="onSearch()">ค้นหา</button>
-                <button mat-button (click)="onReset()" *ngIf="isShowReset">ล้าง</button>
-            </div>
-
-            <div class="flex justify-center w-full">
-                <div class="w-full max-w-6xl bg-white rounded-lg shadow p-4">
-                    <ng-container *ngIf="(persons$ | async) as personResp">
-                        <div class="sm:overflow-visible overflow-x-auto w-full">
-                            <table mat-table [dataSource]="personResp.items || []" class="mat-elevation-z8 w-full">
-                                <ng-container matColumnDef="n_id">
-                                    <th mat-header-cell *matHeaderCellDef> เลขบัตรประชาชน </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.n_id }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> ชื่อจริง </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.name }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="surname">
-                                    <th mat-header-cell *matHeaderCellDef> นามสกุล </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.surname }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="dob">
-                                    <th mat-header-cell *matHeaderCellDef> วันเกิด </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.dob | date:'dd/MM/yyyy' }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="phone">
-                                    <th mat-header-cell *matHeaderCellDef> เบอร์โทร </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.phone }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="nationality">
-                                    <th mat-header-cell *matHeaderCellDef> สัญชาติ </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.nationality }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="citizen">
-                                    <th mat-header-cell *matHeaderCellDef> เชื้อชาติ </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.citizen }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="religion">
-                                    <th mat-header-cell *matHeaderCellDef> ศาสนา </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.religion }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="address">
-                                    <th mat-header-cell *matHeaderCellDef> ที่อยู่ </th>
-                                    <td mat-cell *matCellDef="let person"> {{ person.address }} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="actions">
-                                    <th mat-header-cell *matHeaderCellDef> จัดการ </th>
-                                    <td mat-cell *matCellDef="let person">
-                                        <div class="table-actions">
-                                            <button mat-icon-button color="primary" (click)="onEdit(person)">
-                                                <mat-icon>edit</mat-icon>
-                                            </button>
-                                            <button mat-icon-button color="warn" (click)="onDelete(person)">
-                                                <mat-icon>delete</mat-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                            <mat-paginator [length]="personResp.total || 0"
-                                           [pageSize]="10"
-                                           [pageSizeOptions]="[10, 20, 50]"
-                                           (page)="onChangePage($event)">
-                            </mat-paginator>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-        </mat-drawer-content>
-    </mat-drawer-container>
+          </ng-container>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>
