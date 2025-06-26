@@ -1,0 +1,77 @@
+<div class="flex flex-auto">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+            <div class="pr-4 pl-3">
+                <h1 class="text-2xl font-semibold">{{ isEdit ? 'แก้ไขข้อมูลนักเรียน' : 'เพิ่มข้อมูลนักเรียน' }}</h1>
+            </div>
+            <div class="flex items-center">
+                <button mat-icon-button (click)="onClose()" name="close">
+                    <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <mat-divider class="mt-2 mb-3"></mat-divider>
+
+        <form *ngIf="initForm" [formGroup]="initForm" class="h-full flex flex-col">
+            <div class="flex flex-col gap-y-4 flex-1 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>เลขบัตรประชาชน</mat-label>
+                        <input matInput placeholder="เลขบัตรประชาชน" formControlName="n_id">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>ชื่อจริง</mat-label>
+                        <input matInput placeholder="ชื่อจริง" formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>นามสกุล</mat-label>
+                        <input matInput placeholder="นามสกุล" formControlName="surname">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>วันเกิด</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="เลือกวันเกิด" formControlName="dob">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>เพศ</mat-label>
+                        <input matInput placeholder="เพศ" formControlName="gender">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>เชื้อชาติ</mat-label>
+                        <input matInput placeholder="เชื้อชาติ" formControlName="citizen">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>สัญชาติ</mat-label>
+                        <input matInput placeholder="สัญชาติ" formControlName="nationality">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>ศาสนา</mat-label>
+                        <input matInput placeholder="ศาสนา" formControlName="religion">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>เบอร์โทร</mat-label>
+                        <input matInput placeholder="เบอร์โทร" formControlName="phone">
+                    </mat-form-field>
+                    <mat-form-field class="w-full" subscriptSizing="dynamic">
+                        <mat-label>ที่อยู่</mat-label>
+                        <input matInput placeholder="ที่อยู่" formControlName="address">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="flex items-center justify-end p-4 gap-x-4">
+                <button mat-button (click)="onClose()" name="cancel">
+                    ยกเลิก
+                </button>
+                <button mat-flat-button color="primary" [disabled]="initForm.invalid || disableSave" (click)="onSave()" name="save">
+                    บันทึก
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

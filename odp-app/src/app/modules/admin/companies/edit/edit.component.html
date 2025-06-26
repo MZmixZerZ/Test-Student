@@ -1,0 +1,107 @@
+
+
+<mat-drawer-container class="flex-auto h-full bg-transparent">
+
+
+  <mat-drawer-content class="flex flex-col">
+      <div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+          <!-- Main -->
+          <div class="flex flex-auto overflow-y-auto">
+            <div class=" px-20 py-10 w-full">
+
+              <!--  -->
+              <div class="flex flex-initial items-center">
+                <div class="font-mono text-4xl font-semibold text-primary opacity-80">
+                  ข้อมูลบริษัท
+                </div>
+              </div>
+        
+              <!--  -->
+              <div class="bg-white w-full rounded-lg border-[2px] p-5 flex flex-col md:flex-row">
+        
+                  <!--  -->
+                  <div class="flex-shrink-0 flex flex-col items-center w-1/4">
+                    <label for="uploadLogo" class="cursor-pointer">
+                      <img [src]=logoUrl alt="Company Logo" class="w-40 h-40 object-cover" />
+                      <p class="text-gray-500 text-sm mt-2 text-center">คลิกที่รูป <br> เพื่ออัพโหลด</p>
+                    </label>
+                    <input id="uploadLogo" (change)="changeImage($event)" accept="image/*" type="file" class="hidden" />
+                  </div>
+        
+                  <!--  -->
+                  <div class="w-full ">
+        
+                      <!--  -->
+                      <form class="grid w-full gap-2 p-6 sm:grid-cols-12" [formGroup]="initForm" >
+                            <!-- ทะเบียนบริษัท -->
+                            <div class="sm:col-span-2 flex items-center">
+                              <label class="font-medium">ทะเบียนบริษัท:</label>
+                            </div>
+                            <mat-form-field class="bg-gray-50 sm:col-span-4 w-full focus:outline-none" appearance="outline">
+                              <input id="registrationNo" readonly matInput placeholder="0107535000010" [formControlName]="'registerNo'" />
+                            </mat-form-field>
+                          
+                            <!-- ประเภทบริษัท -->
+                            <div class="sm:col-span-6 flex items-center"></div>
+                          
+                          
+                          <!-- ชื่อบริษัท -->
+                          <div class="sm:col-span-2 flex items-center">
+                            <label class="font-medium">ชื่อบริษัท:</label>
+                          </div>
+                          <mat-form-field class="bg-gray-50 sm:col-span-10 w-full" appearance="outline">
+                            <input id="companyName" readonly matInput placeholder="บริษัท ประสิทธิพัฒนา จำกัด (มหาชน)" [formControlName]="'name'" />
+                          </mat-form-field>
+                        
+                          <!-- ชื่อย่อบริษัท -->
+                          <div class="sm:col-span-2 flex items-center">
+                            <label for="companyShortName" class="font-medium">ชื่อย่อบริษัท:</label>
+                          </div>
+                          <mat-form-field class="sm:col-span-4 w-full" appearance="outline">
+                            <input id="companyShortName" matInput placeholder="PYT" tabindex="2" [formControlName]="'companyShortName'" />
+                          </mat-form-field>
+                        
+                          <!-- เลขผู้เสียภาษี -->
+                          <div class="sm:col-span-2 flex items-center">
+                            <label for="taxId" class="font-medium">เลขผู้เสียภาษี:</label>
+                          </div>
+                          <mat-form-field class="sm:col-span-4 w-full" appearance="outline">
+                            <input id="taxId" matInput placeholder="1234567892345" tabindex="3" [formControlName]="'taxId'" />
+                          </mat-form-field>
+                      
+                          <!-- ที่ตั้ง -->
+                          <div class="sm:col-span-2 flex items-start">
+                            <label for="address" class="font-medium">ที่ตั้ง:</label>
+                          </div>
+                          <mat-form-field class="sm:col-span-10 w-full" appearance="outline">
+                            <textarea matInput id="address" placeholder="943 ถนนเพลินไชย เขตพญาไท กรุงเทพฯ 10400" tabindex="6" [formControlName]="'address'"></textarea>
+                          </mat-form-field>
+                        
+                         
+        
+        
+                        <div class="sm:col-span-6"></div>
+                          
+        
+                      <div class="flex items-center justify-end p-4 gap-x-4">
+        
+                          <button mat-button (click)="gotoBack()" name="cancel">
+                              ยกเลิก
+                          </button>
+                          <button mat-flat-button  [color]="'primary'" [disabled]="initForm.invalid" (click)="submitForm()"
+                              name="save">
+                              บันทึก
+                          </button>
+                      </div>
+                      
+                      </form>
+        
+        
+                  </div>
+              </div>
+              
+            </div>
+          </div>
+      </div>
+  </mat-drawer-content>

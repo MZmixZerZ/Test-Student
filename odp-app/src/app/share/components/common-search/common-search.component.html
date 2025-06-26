@@ -1,0 +1,68 @@
+
+@if(initForm){    
+    <form [formGroup]="initForm">
+        <div class="flex relative" #dropdownContainer>
+            <button mat-mini-fab 
+                color="primary" 
+                matTooltip="ค้นหา" 
+                matTooltipPosition="above"
+                class="shadow-none bg-transparent border-solid border-2 border-slate-400 rounded-full hover:text-[#4084bf] hover:border-[#4084bf]"
+                [ngClass]="isDropdownOpen ? 'text-[#4084bf] border-[#4084bf]' : 'text-slate-400'"
+                name="create_search"
+                (click)="toggleDropdown($event)"
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+            </button>
+            
+            <!-- Popup Dropdown -->
+            <div *ngIf="isDropdownOpen"
+                class="absolute right-0 z-99999 mt-12 w-80 md:w-120 p-4 bg-white shadow-lg border rounded-lg">
+                <div class="flex flex-col gap-x-4">
+
+                    <mat-form-field class="fuse-mat-dense w-full" subscriptSizing="dynamic">
+                        <mat-label>{{searchConfig?.label?.keyword}}</mat-label>
+                        <input matInput [autocomplete]="'off'" 
+                            [placeholder]="searchConfig?.placeholder?.keyword"
+                            name="search" 
+                            [formControlName]="'keyword'"
+                        />
+                        <div matSuffix class="pl-2">
+                            <mat-spinner class="h-6 w-6"></mat-spinner>
+                        </div>
+                    </mat-form-field>
+
+                    @if(searchConfig.useRangeDate){
+                        <mat-form-field class="w-full mt-4" subscriptSizing="dynamic"> 
+                            <mat-label>{{searchConfig?.label?.rangeDate}}</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate [placeholder]="searchConfig?.placeholder?.startDate" [formControlName]="'startDate'">
+                                <input matEndDate [placeholder]="searchConfig?.placeholder?.endDate" [formControlName]="'endDate'">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker>
+                                <mat-date-range-picker-actions>
+                                    <button mat-button matDateRangePickerCancel>ยกเลิก</button>
+                                    <button mat-raised-button color="warn" matDateRangePickerApply (click)="onClearDateRange()">ล้างค่า</button>
+                                    <button mat-raised-button color="primary" matDateRangePickerApply>ปรับใช้</button>
+                                </mat-date-range-picker-actions>
+                            </mat-date-range-picker>
+                        </mat-form-field>
+                    }
+                    <div class="flex justify-between mt-4">
+                        <div class="text-gray-400  content-center">
+                            @if(isShowReset){
+                                <span class="cursor-pointer" (click)="onReset()">
+                                    รีเซ็ตการค้นหา
+                                </span>
+                            }
+                        </div>
+
+                        <button mat-flat-button color="primary" (click)="onSearch()" name="btn_search">
+                            <span class="ml-2 mr-1">ค้นหา</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

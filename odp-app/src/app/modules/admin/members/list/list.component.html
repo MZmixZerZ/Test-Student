@@ -1,0 +1,46 @@
+<div class="absolute inset-0 flex overflow-hidden">
+    <mat-drawer-container class="bg-card h-full flex-auto dark:bg-transparent">
+        <!-- Drawer -->
+        <mat-drawer class="w-full dark:bg-gray-900 md:w-160" [mode]="drawerMode" [opened]="false" [position]="'end'"
+            [disableClose]="true" #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex w-full flex-col gap-y-4 overflow-auto p-6">
+            <div class="flex flex-wrap gap-4 text-3xl">
+                <div class="flex flex-initial items-center gap-x-2">
+                    <div class="font-mono text-4xl font-semibold text-primary opacity-80">
+                        จัดการ
+                    </div>
+                </div>
+
+                <div class="flex flex-auto items-center justify-end gap-x-2">
+                
+
+                    <div class="w-auto">
+                        <button mat-flat-button class="ml-4 w-auto bg-[#22c55e] rounded-lg text-white"
+                            (click)="onOpenCreate()" name="create_user">
+                            <span class="ml-2 mr-1">เพิ่มข้อมูล</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+
+            @if((members$ | async); as memberResp){
+            <div class="sm:overflow-visible overflow-x-auto w-full">
+                <app-table-member 
+                    [memberResp]="memberResp" 
+                    (edit)="onEdit($event)" 
+                    (delete)="onDelete($event)"
+                    (updateStatus)="onUpdateStatus($event)"
+                    (changePage)="onChangePage($event)"
+                >
+                </app-table-member>
+            </div>
+
+            }
+
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

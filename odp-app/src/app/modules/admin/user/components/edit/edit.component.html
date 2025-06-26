@@ -1,0 +1,236 @@
+<div class="flex flex-auto">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+            <div class="pr-4 pl-3">
+                <h1 class="text-2xl font-semibold">{{(isEdit) ? 'เเก้ไขผู้ใช้งาน' : 'สร้างผู้ใช้งาน'}}</h1>
+                <!-- <p class="text-sm text-gray-500">create user detail</p> -->
+            </div>
+
+            <div class="flex items-center">
+                <a mat-icon-button (click)="onClose()" name="close">
+                    <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </a>
+            </div>
+        </div>
+
+        <mat-divider class="mt-2 mb-3"></mat-divider>
+
+        @if(initForm){
+            <form [formGroup]="initForm">
+                <!-- Title -->
+                <div class="flex flex-col gap-y-4">
+                    <div class="flex justify-between font-bold ">
+                        <span > 
+                            สิทธิการเข้าถึง
+                        </span>
+                    
+                        <div class="flex items-center gap-x-2">
+                            <span>  สถานะ </span>
+                            <mat-slide-toggle name="isActive"
+                                [formControlName]="'isActive'"
+                            >
+                            </mat-slide-toggle>
+                        </div>
+                        
+                    </div>
+
+                    <!-- <div formArrayName="roles">
+                        @for (role of displayRoles; track role; let i = $index;) {
+                            <mat-checkbox [name]="'select_'+role" [formControlName]="i">
+                                {{ role | titlecase }}
+                            </mat-checkbox>
+                        }
+                    </div> -->
+
+                    <mat-radio-group class="flex gap-x-10 gap-y-4 flex-wrap" [formControlName]="'role'">
+                        <mat-radio-button [value]="'owner'" >Owner</mat-radio-button>
+                        <mat-radio-button [value]="'admin'" >Admin</mat-radio-button>
+                        <mat-radio-button [value]="'operator'" >Operator</mat-radio-button>
+                        <mat-radio-button [value]="'staff'" >Staff</mat-radio-button>
+                    </mat-radio-group>
+
+                    <div class="grid  grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+                            <mat-label class="asterisk--after">ชื่อ-นามสกุล</mat-label>
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <input matInput [placeholder]="'ระบุชื่อ-นามสกุล'" name="input_fullname" [formControlName]="'fullName'">
+                            </mat-form-field>
+                        </div>
+                        
+                        <div>
+                            
+                        </div>
+
+                        <div>
+                            <mat-label class="asterisk--after">อีเมล (สำหรับการเข้าระบบ)</mat-label>
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <input type="text" matInput [placeholder]="'ระบุอีเมลผู้ใช้งาน'" name="input_username" [formControlName]="'username'">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="flex flex-col justify-center md:pt-5">
+                            <div class="flex items-center">
+                                <span>6-20 ตัวอักษร </span>  
+                                @if(
+                                    getUsername?.errors?.required
+                                ){
+                                    <mat-icon
+                                        class="text-red-600" [svgIcon]="'close'"
+                                    >
+                                    </mat-icon>
+                                }
+
+                                @if(
+                                    !getUsername?.errors?.required
+                                ){
+                                    <mat-icon
+                                        class="text-green-600" [svgIcon]="'done'"
+                                    >
+                                    </mat-icon>
+                                }
+                            </div>
+
+                            <div class="flex items-center">
+                                <span>ตัวอักษร a-z A-Z, ตัวเลข 0-9 เท่านั้น </span> 
+                                @if(getUsername?.errors?.pattern || getUsername?.errors?.required){
+                                    <mat-icon
+                                        class="text-red-600" [svgIcon]="'close'"
+                                    >
+                                    </mat-icon>
+                                }
+
+                                @if(!getUsername?.errors?.pattern && !getUsername?.errors?.required){
+                                    <mat-icon
+                                        class="text-green-600" [svgIcon]="'done'"
+                                    >
+                                    </mat-icon>
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            <mat-label class="asterisk--after">รหัสผ่าน</mat-label>
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <input matInput [placeholder]="'ระบุรหัสผ่าน'" name="input_password" [formControlName]="'password'">
+                            </mat-form-field>
+                        </div>
+                        
+                        @if(enterPassword){
+                            <div class="flex flex-col justify-center md:pt-5">
+                                <div class="flex items-center">
+                                    <span>6-20 ตัวอักษร </span>  
+                                    @if(getPassword?.errors?.minlength || 
+                                    getPassword?.errors?.maxlength || 
+                                    getPassword?.errors?.required
+                                    ){
+                                        <mat-icon
+                                            class="text-red-600" [svgIcon]="'close'"
+                                        >
+                                        </mat-icon>
+                                    }
+
+                                    @if(
+                                        !getPassword?.errors?.minlength &&
+                                        !getPassword?.errors?.maxlength &&
+                                        !getPassword?.errors?.required
+                                    ){
+                                        <mat-icon
+                                            class="text-green-600" [svgIcon]="'done'"
+                                        >
+                                        </mat-icon>
+                                    }
+                                </div>
+            
+                                <div class="flex items-center">
+                                    <span>ตัวอักษร a-z A-Z, ตัวเลข 0-9 เท่านั้น </span> 
+                                    @if(
+                                        getPassword?.errors?.pattern || 
+                                        getPassword?.errors?.required
+                                    ){
+                                        <mat-icon
+                                            class="text-red-600" [svgIcon]="'close'"
+                                        >
+                                        </mat-icon>
+                                    }
+                                    @if(
+                                        !getPassword?.errors?.pattern && 
+                                        !getPassword?.errors?.required
+                                    ){
+                                        <mat-icon
+                                            class="text-green-600" [svgIcon]="'done'"
+                                        >
+                                        </mat-icon>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        @if(!enterPassword){
+                            <div class="row-span-2 flex justify-center items-center">
+                                
+                                <button mat-flat-button
+                                    class="w-full sm:w-5/6"
+                                    [color]="'primary'"
+                                    (click)="onChangePassword()"
+                                    name="change_password"
+                                >
+                                    เปลี่ยนรหัสผ่าน
+                                </button>
+                            </div>
+                        }
+
+                        <mat-form-field  class="w-full" subscriptSizing="dynamic">
+                            <input matInput [placeholder]="'ยืนยันรหัสผ่าน'" name="input_confirm_password" [formControlName]="'confirmPassword'">
+                        </mat-form-field>
+                        @if(enterPassword){
+                            <div class="flex flex-row items-center">
+                                @if(!getConfirmPassword?.errors?.required){
+                                    <span> รหัสผ่านตรงกัน </span>
+                                    @if(getCheckConfirmPass){
+                                        <mat-icon class="text-red-600" [svgIcon]="'close'">   
+                                        </mat-icon> 
+                                    }
+
+                                    @if(!getCheckConfirmPass){
+                                        <mat-icon class="text-green-600" [svgIcon]="'done'">
+                                        </mat-icon>
+                                    }
+                                }
+                            </div>
+                        }
+                        
+                        <div>
+                            <mat-label class="asterisk--after">เบอร์โทรศัพท์</mat-label>
+                            <mat-form-field class="w-full" subscriptSizing="dynamic">
+                                <input maxlength="10" matInput [placeholder]="'ระบุเบอร์โทรศัพท์'" name="input_tel" [formControlName]="'phoneNumber'">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                <div class="flex items-center justify-end p-4 gap-x-4">
+
+                    <button mat-button
+                        (click)="onClose()"
+                        name="cancel"
+                    >
+                        ยกเลิก
+                    </button>
+                    <button mat-flat-button
+                        [color]="'primary'"
+                        [disabled]="initForm.invalid || disabledSave"
+                        (click)="onSave()"
+                        name="save"
+                    >
+                        บันทึก
+                    </button>
+                </div>
+
+            </form>
+        }
+    </div>
+</div>

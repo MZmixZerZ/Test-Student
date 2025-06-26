@@ -1,0 +1,155 @@
+<mat-drawer-container class="h-full flex-auto bg-transparent">
+    <mat-drawer-content class="flex flex-col">
+        <div
+            class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+        >
+            <!-- Main -->
+            <div class="flex flex-auto overflow-y-auto">
+                <div class="w-full px-20 py-10">
+                    <!--  -->
+                    <div class="flex flex-initial items-center">
+                        <div
+                            class="font-mono text-4xl font-semibold text-primary opacity-80"
+                        >
+                            ข้อมูลบริษัท
+                        </div>
+                    </div>
+
+                    <!--  -->
+                    <div
+                        class="flex w-full flex-col rounded-lg border-[2px] bg-white p-5 md:flex-row"
+                    >
+                        <!-- Image -->
+                        <div
+                            class="flex w-1/4 flex-shrink-0 flex-col items-center"
+                        >
+                            <label for="uploadLogo" class="cursor-pointer">
+                                <img
+                                    [src]="logoUrl"
+                                    alt="Company Logo"
+                                    class="h-40 w-40 object-cover"
+                                />
+                            </label>
+                        </div>
+                        <!-- <div class=" w-4/12 ">
+                          </div> -->
+
+                        <!--  -->
+                        <div class="w-full">
+                            <!--  -->
+                            <div class="grid w-full gap-2 sm:grid-cols-12">
+                                <div class="flex justify-end sm:col-span-12">
+                                    <button
+                                        type="submit"
+                                        mat-raised-button
+                                        tabindex="9"
+                                        (click)="GotoUpdateCompany()"
+                                        color="primary"
+                                        class="py-5 text-white"
+                                    >
+                                        <span>แก้ไขข้อมูล</span>
+                                        <!-- @if (!companyForm.disabled) {
+                                        }
+                                        @if (companyForm.disabled) {
+                                            <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+                                        } -->
+                                    </button>
+                                </div>
+
+                                <!-- ทะเบียนบริษัท -->
+                                <div class="flex items-center sm:col-span-2">
+                                    <label class="font-medium"
+                                        >ทะเบียนบริษัท:</label
+                                    >
+                                </div>
+                                <div
+                                    class="w-full focus:outline-none sm:col-span-4"
+                                    appearance="outline"
+                                >
+                                    <label class="font-medium">{{
+                                        company.registerNo
+                                    }}</label>
+                                </div>
+
+                                <!-- รหัสบริษัท -->
+                                <div class="flex items-center sm:col-span-6">
+                                    
+                                </div>
+                            
+
+                                <!-- ชื่อบริษัท -->
+                                <div class="flex items-center sm:col-span-2">
+                                    <label class="font-medium"
+                                        >ชื่อบริษัท:</label
+                                    >
+                                </div>
+                                <div
+                                    class="w-full sm:col-span-10"
+                                    appearance="outline"
+                                >
+                                    <label class="font-medium">{{
+                                        company.name
+                                    }}</label>
+                                </div>
+
+                                <!-- ชื่อย่อบริษัท -->
+                                <div class="flex items-center sm:col-span-2">
+                                    <label
+                                        for="companyShortName"
+                                        class="font-medium"
+                                        >ชื่อย่อบริษัท:</label
+                                    >
+                                </div>
+                                <div
+                                    class="w-full sm:col-span-4"
+                                    appearance="outline"
+                                >
+                                    <label class="font-medium">{{
+                                        company.companyShortName
+                                    }}</label>
+                                </div>
+
+                                <!-- เลขผู้เสียภาษี -->
+                                <div class="flex items-center sm:col-span-2">
+                                    <label for="taxId" class="font-medium"
+                                        >เลขผู้เสียภาษี:</label
+                                    >
+                                </div>
+                                <div
+                                    class="w-full sm:col-span-4"
+                                    appearance="outline"
+                                >
+                                    <label class="font-medium">{{
+                                        company.taxId
+                                    }}</label>
+                                </div>
+
+
+                                
+
+                                <!-- ที่ตั้ง -->
+                                <div class="flex items-start sm:col-span-2">
+                                    <label for="address" class="font-medium"
+                                        >ที่ตั้ง:</label
+                                    >
+                                </div>
+                                <div
+                                    class="w-full sm:col-span-10"
+                                    appearance="outline"
+                                >
+                                    <label class="font-medium">{{
+                                        company.address
+                                    }}</label>
+                                </div>
+
+        
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

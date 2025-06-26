@@ -1,0 +1,51 @@
+:host ::ng-deep .mat-mdc-tab-group {
+    .mat-mdc-tab-header .mat-mdc-tab-label-container {
+        margin: 0px;
+        margin-bottom: 20px;
+    }
+    .mat-mdc-tab-body-content {
+        padding: 0px;
+    }
+}
+
+::ng-deep .theme-brand.light .mat-elevation-z8 {
+    box-shadow: none !important;
+}
+
+/* เพิ่มเติมสำหรับตารางและฟอร์ม */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-form-field {
+    min-width: 180px;
+}
+
+@media (max-width: 600px) {
+    .mat-form-field {
+        min-width: 120px;
+    }
+}
+
+/* ปรับความกว้างปุ่มในตาราง */
+.table-actions button {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+}
+
+/* ปรับความกว้างตารางให้เต็ม */
+table.mat-table {
+    width: 100%;
+}
+
+/* ปรับให้ paginator อยู่ชิดขวา */
+mat-paginator {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+

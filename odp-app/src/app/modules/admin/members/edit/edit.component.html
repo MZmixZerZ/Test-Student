@@ -1,0 +1,51 @@
+<div class="flex flex-auto">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+            <div class="pr-4 pl-3">
+                <h1 class="text-2xl font-semibold">{{(isEdit) ? 'เเก้ไขทรัพย์สิน' : 'สร้างทรัพย์สิน'}}</h1>
+                <!-- <p class="text-sm text-gray-500">create user detail</p> -->
+            </div>
+
+            <div class="flex items-center">
+                <a mat-icon-button (click)="onClose()" name="close">
+                    <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </a>
+            </div>
+        </div>
+
+        <mat-divider class="mt-2 mb-3"></mat-divider>
+
+        @if(initForm){
+        <form [formGroup]="initForm">
+            <!-- Title -->
+            <div class="flex flex-col gap-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <mat-form-field class="w-full" subscriptSizing="dynamic">
+                            <mat-label>ชื่อ</mat-label>
+                            <input matInput [placeholder]="'ระบุชื่อ'" name="input_name"
+                                [formControlName]="'name'">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="flex items-center justify-end p-4 gap-x-4">
+
+                <button mat-button (click)="onClose()" name="cancel">
+                    ยกเลิก
+                </button>
+                <button mat-flat-button [color]="'primary'" [disabled]="initForm.invalid || disableSave" (click)="onSave()"
+                    name="save">
+                    บันทึก
+                </button>
+            </div>
+
+        </form>
+        }
+    </div>
+</div>

@@ -1,0 +1,9 @@
+:host ::ng-deep {
+    .mdc-radio {
+      padding: 0px !important;
+    } 
+    .mdc-form-field .mdc-radio--disabled .mdc-radio__native-control{
+      visibility: hidden;
+    }
+  }
+  

@@ -1,0 +1,76 @@
+<div class="absolute inset-0 flex overflow-hidden">
+    <mat-drawer-container class="bg-card h-full flex-auto dark:bg-transparent">
+        <!-- Drawer -->
+        <mat-drawer
+            class="w-full dark:bg-gray-900 md:w-160"
+            [mode]="drawerMode"
+            [opened]="false"
+            [position]="'end'"
+            [disableClose]="true"
+            #matDrawer
+        >
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content
+            class="flex w-full flex-col gap-y-4 overflow-auto p-6"
+        >
+            <div class="flex flex-wrap gap-4 text-3xl">
+                <div class="flex flex-initial items-center">
+                    <div class="font-mono text-4xl font-semibold text-primary opacity-80">
+                        สิทธิ์การใช้งาน
+                    </div>
+                </div>
+ 
+
+                <div class="flex flex-auto items-center justify-end gap-x-2">
+                    <div class="w-auto">
+                        <button
+                            mat-flat-button
+                            class="ml-4 w-auto rounded-lg"
+                            [color]="'primary'"
+                            (click)="onOpenCreate()" 
+                            name="create"
+                        >
+                        
+                            <span class="ml-2 mr-1">เพิ่มผู้ใช้งาน</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <div class="flex flex-wrap items-end  gap-x-4">
+                    @for (item of isActiveLists; track item) {
+                        @if(getIsActive === item.value){
+                            <button mat-flat-button [color]="'primary'">{{item.displayName}}</button>
+                        } 
+    
+                        @else{
+                            <button mat-stroked-button (click)="onSelectedIsActive(item)" [name]="'btn_'+item.displayName">{{item.displayName}}</button>
+                        }
+                    }
+                </div>
+                
+                <common-search 
+                    [searchConfig]="searchConfig"
+                    (search)="onSearch($event)"
+                >
+                </common-search>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            @if((users$ | async); as usersResp){
+                <app-user-table
+                [usersResp]="usersResp"
+                (edit)="onEdit($event)"
+                (delete)="onDelete($event)"
+                (updateStatus)="onUpdateStatus($event)"
+                (changePage)="onChangePage($event)">
+                </app-user-table>
+            }
+            
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

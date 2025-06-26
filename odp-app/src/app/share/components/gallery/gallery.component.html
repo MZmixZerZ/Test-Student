@@ -1,0 +1,30 @@
+<div *ngIf="isOpen"
+    class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-80 z-[9999]">
+
+    <!-- ปุ่ม Close -->
+    <button (click)="closeGallery()" class="absolute top-4 right-10 text-white text-4xl z-[10000]">
+        &times;
+    </button>
+
+    <!-- Lightbox Content -->
+    <div class="relative max-w-4xl w-full p-4">
+        <div class="flex items-center justify-center relative">
+
+            <!-- ปุ่มเลื่อนซ้าย -->
+            <button *ngIf="images.length > 1" (click)="prevImage()"
+                class="absolute left-2 md:left-[-50px] inset-y-0 my-auto text-white text-4xl p-2">
+                &larr;
+            </button>
+
+            <!-- รูปภาพ -->
+            <img [src]="images[currentIndex]" class="max-h-[80vh] rounded-lg shadow-lg" (error)="onImageError($event)" />
+
+            <!-- ปุ่มเลื่อนขวา -->
+            <button *ngIf="images.length > 1" (click)="nextImage()"
+                class="absolute right-2 md:right-[-50px] inset-y-0 my-auto text-white text-4xl p-2">
+                &rarr;
+            </button>
+
+        </div>
+    </div>
+</div>

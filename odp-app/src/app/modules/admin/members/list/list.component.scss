@@ -1,0 +1,16 @@
+:host ::ng-deep .mat-mdc-tab-group {
+    .mat-mdc-tab-header .mat-mdc-tab-label-container {
+        margin: 0px;
+        margin-bottom: 20px;
+        
+    }
+    .mat-mdc-tab-body-content {
+        // margin-top: 20px;
+        padding: 0px;
+    }
+}
+
+::ng-deep .theme-brand.light .mat-elevation-z8 {
+    box-shadow: none !important;
+}
+
