@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, BehaviorSubject, tap, of } from 'rxjs';
+import { map, Observable, BehaviorSubject, tap } from 'rxjs';
 import { PageResponse } from '../base/pageResponse.types';
 import { Response } from '../base/response.types';
 import { SearchParameter } from '../base/parameters/searchParameter.entity';
@@ -29,7 +29,6 @@ export class MemberService {
         this._member.next(value);
     }
 
-
     get memberLists$(): Observable<PageResponse<Member[]>> {
         return this._memberLists.asObservable();
     }
@@ -39,10 +38,10 @@ export class MemberService {
     }
 
     getMemberLists(param: SearchParameter): Observable<PageResponse<Member[]>> {
-        let options = {
+        const options = {
             params: param.toHttpParams()
         };
-        return this._httpClient.get<PageResponse<Member[]>>(this.apiUrl.memberUrl,options).pipe(
+        return this._httpClient.get<PageResponse<Member[]>>(this.apiUrl.memberUrl, options).pipe(
             tap((member) => {
                 this._memberLists.next(member);
             })

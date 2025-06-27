@@ -9,13 +9,25 @@ export class MemberEntity {
   public id: string;
 
   @Expose()
-  @Prop({ type: String, unique: true, required: true })
-  name: string;
+  @Prop({ type: String, required: true, unique: true })
+  memberId: string; // รหัสสมาชิก (increment หรือ unique)
 
   @Expose()
   @Prop({ type: String, required: true })
-  companyId: string;
-  
+  idCard: string; // เลขบัตรประชาชน
+
+  @Expose()
+  @Prop({ type: String, required: true })
+  organization: string; // องค์กร
+
+  @Expose()
+  @Prop({ type: String, required: true })
+  contactPerson: string; // ผู้ติดต่อ
+
+  @Expose()
+  @Prop({ type: String, required: true })
+  contactPhone: string; // เบอร์ผู้ติดต่อ
+
   @Expose()
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;

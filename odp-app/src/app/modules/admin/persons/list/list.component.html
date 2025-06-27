@@ -27,6 +27,12 @@
 
     <!-- table-container ไม่ต้อง wrap ด้วย flex/justify-center -->
     <div class="table-container">
+      <div class="mb-8">
+        <h1 class="text-3xl font-extrabold mb-4 text-blue-800 tracking-wide" style="letter-spacing: 1px;">
+          ข้อมูลลูกค้า
+        </h1>
+        <mat-divider></mat-divider>
+      </div>
       <ng-container *ngIf="(persons$ | async) as personResp">
         <div class="sm:overflow-visible overflow-x-auto w-full">
           <table mat-table [dataSource]="personResp.items || []" class="mat-elevation-z8 w-full">

@@ -9,9 +9,9 @@ import {
   Query,
   UseGuards,
   Req,
+  SetMetadata,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { SetMetadata } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateMemberDto } from '../../application/dtos/create-member.dto';
 import { UpdateMemberDto } from '../../application/dtos/update-member.dto';
@@ -24,8 +24,8 @@ import { GetMemberByIdQuery } from '../../application/queries/get-member-by-id.q
 
 @ApiTags('members')
 @Controller('members')
-@ApiBearerAuth() // ใช้ Bearer Token ในการเข้าถึง API นี้
-@UseGuards(RolesAndScopesGuard) // ใช้ RolesGuard กับทั้ง controller
+@ApiBearerAuth()
+@UseGuards(RolesAndScopesGuard)
 export class MemberController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -33,7 +33,7 @@ export class MemberController {
   ) {}
 
   @Post()
-  @SetMetadata('roles', ['owner', 'admin']) // กำหนดว่าเฉพาะ admin ที่สามารถเรียกใช้งานได้
+  @SetMetadata('roles', ['owner', 'admin'])
   @ApiOperation({ summary: 'Create a new member' })
   @ApiResponse({ status: 201, description: 'Member successfully created' })
   async createMember(
@@ -49,39 +49,14 @@ export class MemberController {
 
   @Get()
   @ApiOperation({ summary: 'Get all members with pagination' })
-  @ApiQuery({
-    name: 'page',
-    required: false,
-    description: 'Page number',
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    description: 'Number of items per page',
-    type: Number,
-  })
-  @ApiQuery({
-    name: 'sortBy',
-    required: false,
-    description: 'sort by field name',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'sortType',
-    required: false,
-    description: 'sort type order by asc desc',
-    type: String,
-  })
-  @ApiQuery({
-    name: 'keyword',
-    required: false,
-    description: 'keyword for search',
-    type: String,
-  })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number', type: Number })
+  @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page', type: Number })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'sort by field name', type: String })
+  @ApiQuery({ name: 'sortType', required: false, description: 'sort type order by asc desc', type: String })
+  @ApiQuery({ name: 'keyword', required: false, description: 'keyword for search', type: String })
   @ApiResponse({ status: 200, description: 'List of all members' })
   async getAllMembers(
-    @Query('page') page = 1, 
+    @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('sortBy') sortBy: string,
     @Query('sortType') sortType: 'asc' | 'desc',
@@ -100,7 +75,7 @@ export class MemberController {
   }
 
   @Put(':id')
-  @SetMetadata('roles', ['owner', 'admin']) // กำหนดว่าเฉพาะ admin ที่สามารถเรียกใช้งานได้
+  @SetMetadata('roles', ['owner', 'admin'])
   @ApiOperation({ summary: 'Update a member by ID' })
   @ApiResponse({ status: 200, description: 'Member successfully updated' })
   async updateMember(
@@ -109,7 +84,7 @@ export class MemberController {
     @Req() req,
   ) {
     const command = new UpdateMemberCommand(
-      id, 
+      id,
       updateMemberDto,
       req.user,
     );
@@ -117,7 +92,7 @@ export class MemberController {
   }
 
   @Delete(':id')
-  @SetMetadata('roles', ['owner', 'admin']) // กำหนดว่าเฉพาะ admin ที่สามารถเรียกใช้งานได้
+  @SetMetadata('roles', ['owner', 'admin'])
   @ApiOperation({ summary: 'Delete a member by ID' })
   @ApiResponse({ status: 200, description: 'Member successfully deleted' })
   async deleteMember(@Param('id') id: string): Promise<void> {

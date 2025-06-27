@@ -16,18 +16,21 @@ export class CreateMemberHandler
 
   async execute(command: CreateMemberCommand): Promise<ResponseDto<MemberEntity>> {
     const { createMemberDto, createdBy } = command;
+
+    // ตรวจสอบซ้ำด้วย memberId (unique)
     const existingMember = await this.memberRepository.findByName(
-      createMemberDto.name,
+      createMemberDto.memberId,
     );
     if (existingMember) {
-      throw new BadRequestException('Member already exists');
+      throw new BadRequestException('Member ID already exists');
     }
+
     const today = new Date();
     const member = new MemberEntity();
     Object.assign(member, createMemberDto);
-    member.companyId = createdBy.companySelected;
     member.createdBy = createdBy.id;
     member.createdAt = today;
+
     const newMember = await this.memberRepository.save(member);
     return new ResponseDto<MemberEntity>(newMember);
   }

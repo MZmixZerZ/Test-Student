@@ -15,7 +15,7 @@ import { MemberSchema } from './infrastructure/persistence/member.schema';
 @Module({
   imports: [
     CqrsModule,
-    MongooseModule.forFeature([{ name: 'Member', schema: MemberSchema }])
+    MongooseModule.forFeature([{ name: 'Member', schema: MemberSchema }]),
   ],
   controllers: [MemberController],
   providers: [
@@ -30,6 +30,10 @@ import { MemberSchema } from './infrastructure/persistence/member.schema';
       provide: 'MemberRepository',
       useClass: MemberRepository,
     },
+  ],
+  exports: [
+    MongooseModule,
+    'MemberRepository',
   ],
 })
 export class MemberModule {}

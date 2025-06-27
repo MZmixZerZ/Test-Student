@@ -16,7 +16,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -25,12 +24,14 @@ import { Member } from 'app/core/member/member.type';
 import { CreateMemberDto } from 'app/core/member/dto/create-member.dto';
 import { UpdateMemberDto } from 'app/core/member/dto/update-member.dto';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import { MemberListComponent } from '../list/list.component';
+import { GetMemberParameter } from 'app/core/member/parameters/get-member.parameter';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-member',
     standalone: true,
     imports: [
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
@@ -56,13 +57,8 @@ export class EditMemberComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     disableSave: boolean = false;
 
-    get name() {
-        return this.initForm.get('name');
-    }
-
     constructor(
         private _formBuilder: FormBuilder,
-        private _listMemberComponent: MemberListComponent,
         private _router: Router,
         private _route: ActivatedRoute,
         private _memberService: MemberService,
@@ -74,24 +70,27 @@ export class EditMemberComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._listMemberComponent.matDrawer.open();
-
-        this._memberService.member$
-            .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
-            .subscribe((resp: Member) => {
-                console.log(resp);
-                this.initForm = this.initialForm(resp);
-            });
+        if (this.isEdit) {
+            this._memberService
+                .getMemberById(this.memberId)
+                .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
+                .subscribe((resp: Member) => {
+                    this.initForm = this.initialForm(resp);
+                });
+        } else {
+            this.initForm = this.initialForm();
+        }
     }
 
     initialForm(member?: Member): FormGroup {
-        return this._formBuilder.group(
-            {
-                name: [member?.name || '', [Validators.required]],
-            }
-        );
+        return this._formBuilder.group({
+            memberId: [member?.memberId || '', [Validators.required]],
+            idCard: [member?.idCard || '', [Validators.required]],
+            organization: [member?.organization || '', [Validators.required]],
+            contactPerson: [member?.contactPerson || '', [Validators.required]],
+            contactPhone: [member?.contactPhone || '', [Validators.required]],
+        });
     }
-
 
     onSave(): void {
         this.disableSave = true;
@@ -108,12 +107,13 @@ export class EditMemberComponent implements OnInit {
             .create(body)
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
-                next: (res) => {
-                    this._listMemberComponent.fetchData();
+                next: () => {
+                    const param = new GetMemberParameter();
+                    this._memberService.getMemberLists(param).subscribe();
                     this.onClose();
                     this._fuseConfirmationService.alertSuccess();
                 },
-                error: (err) => {
+                error: () => {
                     this.disableSave = false;
                     this.cdr.detectChanges();
                 },
@@ -125,36 +125,26 @@ export class EditMemberComponent implements OnInit {
             .update(id, body)
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
-                next: (res) => {
-                    this._listMemberComponent.fetchData();
+                next: () => {
+                    const param = new GetMemberParameter();
+                    this._memberService.getMemberLists(param).subscribe();
                     this.onClose();
                     this._fuseConfirmationService.alertSuccess();
                 },
-                error: (err) => {
+                error: () => {
                     this.disableSave = false;
                     this.cdr.detectChanges();
                 },
             });
     }
 
-    closeDrawer(): Promise<MatDrawerToggleResult> {
-        return this._listMemberComponent.matDrawer.close();
-    }
-
     onClose(): void {
+        // ถ้าเป็นหน้าแก้ไข ให้ย้อน 2 step, ถ้าเป็นหน้าเพิ่ม ให้ย้อน 1 step
         if (this.isEdit) {
-            this.backFromUpdate();
+            this._router.navigate(['../../'], { relativeTo: this._route });
         } else {
-            this.backFromCreate();
+            this._router.navigate(['../'], { relativeTo: this._route });
         }
-    }
-
-    backFromCreate(): void {
-        this._router.navigate(['../'], { relativeTo: this._route });
-    }
-
-    backFromUpdate(): void {
-        this._router.navigate(['../../'], { relativeTo: this._route });
     }
 
     ngOnDestroy(): void {
