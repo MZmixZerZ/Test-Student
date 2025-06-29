@@ -1,37 +1,51 @@
-<div class="flex flex-col h-full p-6">
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold">{{ isEdit ? 'แก้ไขข้อมูลสมาชิก' : 'เพิ่มข้อมูลสมาชิก' }}</h2>
-        <button mat-icon-button (click)="onClose()" aria-label="close" class="!m-0 !p-0">
-            <mat-icon fontSet="material-icons-outlined" fontIcon="close" class="text-2xl"></mat-icon>
-        </button>
+<div class="flex flex-auto">
+    <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between -mt-3 -ml-4">
+            <div class="pr-4 pl-3">
+                <h1 class="text-2xl font-semibold">{{(isEdit) ? 'เเก้ไขทรัพย์สิน' : 'สร้างทรัพย์สิน'}}</h1>
+                <!-- <p class="text-sm text-gray-500">create user detail</p> -->
+            </div>
+
+            <div class="flex items-center">
+                <a mat-icon-button (click)="onClose()" name="close">
+                    <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                </a>
+            </div>
+        </div>
+
+        <mat-divider class="mt-2 mb-3"></mat-divider>
+
+        @if(initForm){
+        <form [formGroup]="initForm">
+            <!-- Title -->
+            <div class="flex flex-col gap-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <mat-form-field class="w-full" subscriptSizing="dynamic">
+                            <mat-label>ชื่อ</mat-label>
+                            <input matInput [placeholder]="'ระบุชื่อ'" name="input_name"
+                                [formControlName]="'name'">
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="flex items-center justify-end p-4 gap-x-4">
+
+                <button mat-button (click)="onClose()" name="cancel">
+                    ยกเลิก
+                </button>
+                <button mat-flat-button [color]="'primary'" [disabled]="initForm.invalid || disableSave" (click)="onSave()"
+                    name="save">
+                    บันทึก
+                </button>
+            </div>
+
+        </form>
+        }
     </div>
-    <form *ngIf="initForm" [formGroup]="initForm" class="flex flex-col flex-1">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <mat-form-field class="w-full">
-                <mat-label>Member ID</mat-label>
-                <input matInput formControlName="memberId" placeholder="ระบุ Member ID">
-            </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>เลขบัตรประชาชน</mat-label>
-                <input matInput formControlName="idCard" placeholder="ระบุเลขบัตรประชาชน">
-            </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>องค์กร</mat-label>
-                <input matInput formControlName="organization" placeholder="ระบุองค์กร">
-            </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>ผู้ติดต่อ</mat-label>
-                <input matInput formControlName="contactPerson" placeholder="ระบุชื่อผู้ติดต่อ">
-            </mat-form-field>
-            <mat-form-field class="w-full">
-                <mat-label>เบอร์ผู้ติดต่อ</mat-label>
-                <input matInput formControlName="contactPhone" placeholder="ระบุเบอร์ผู้ติดต่อ">
-            </mat-form-field>
-        </div>
-        <div class="flex justify-end gap-2 mt-8">
-            <button mat-button type="button" (click)="onClose()">ยกเลิก</button>
-            <button mat-flat-button color="primary" type="button"
-                [disabled]="initForm.invalid || disableSave" (click)="onSave()">บันทึก</button>
-        </div>
-    </form>
 </div>

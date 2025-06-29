@@ -22,8 +22,8 @@ import { RolesAndScopesGuard } from '../../../common/presentation/guards/roles-a
 import { DeleteMemberCommand } from '../../application/commands/delete-member.command';
 import { GetMemberByIdQuery } from '../../application/queries/get-member-by-id.query';
 
-@ApiTags('members')
-@Controller('members')
+@ApiTags('member')
+@Controller('member')
 @ApiBearerAuth()
 @UseGuards(RolesAndScopesGuard)
 export class MemberController {
@@ -48,14 +48,14 @@ export class MemberController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all members with pagination' })
+  @ApiOperation({ summary: 'Get all member with pagination' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number', type: Number })
   @ApiQuery({ name: 'limit', required: false, description: 'Number of items per page', type: Number })
   @ApiQuery({ name: 'sortBy', required: false, description: 'sort by field name', type: String })
   @ApiQuery({ name: 'sortType', required: false, description: 'sort type order by asc desc', type: String })
   @ApiQuery({ name: 'keyword', required: false, description: 'keyword for search', type: String })
-  @ApiResponse({ status: 200, description: 'List of all members' })
-  async getAllMembers(
+  @ApiResponse({ status: 200, description: 'List of all member' })
+  async getAllMember(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('sortBy') sortBy: string,

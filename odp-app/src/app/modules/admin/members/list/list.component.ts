@@ -1,27 +1,35 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
     UntypedFormControl,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import {
+    MatDateRangePicker,
+    MatDatepickerModule,
+} from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import { ActivatedRoute, Router, RouterModule, NavigationEnd } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MemberService } from 'app/core/member/member.service';
 import { Member } from 'app/core/member/member.type';
 import { GetMemberParameter } from 'app/core/member/parameters/get-member.parameter';
 import { DEF_LIMIT, Page, SortType } from 'app/core/base/page.type';
 import { PageResponse } from 'app/core/base/pageResponse.types';
-import { Observable, Subject, debounceTime, takeUntil } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, Subject, debounceTime, merge, takeUntil } from 'rxjs';
+import { TableMemberComponent } from '../table/table.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { UpdateMemberDto } from 'app/core/member/dto/update-member.dto';
 
 @Component({
     selector: 'member-list',
@@ -37,23 +45,19 @@ import { filter } from 'rxjs/operators';
         MatProgressSpinnerModule,
         ReactiveFormsModule,
         MatDividerModule,
+        MatSelectModule,
         RouterModule,
+        MatTabsModule,
+        MatDatepickerModule,
+        TableMemberComponent,
+        MatTooltipModule
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.scss',
 })
 export class MemberListComponent {
-    @ViewChild('matDrawer') matDrawer!: MatDrawer;
-
-    displayedColumns: string[] = [
-        'memberId',
-        'idCard',
-        'organization',
-        'contactPerson',
-        'contactPhone',
-        'actions'
-    ];
-
+    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
+    
     isShowReset: boolean = false;
     showLoading = {
         search: false,
@@ -68,6 +72,7 @@ export class MemberListComponent {
     };
 
     searchInputControl: UntypedFormControl = new UntypedFormControl();
+    statusControl: UntypedFormControl = new UntypedFormControl('');
 
     members$: Observable<PageResponse<Member[]>>;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -78,39 +83,30 @@ export class MemberListComponent {
         private _memberService: MemberService,
         private _fuseConfirmationService: FuseConfirmationService
     ) {
-        // ปิด drawer ทุกครั้งที่เปลี่ยน route (กลับหน้าลิสต์)
-        this._router.events
-            .pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(() => {
-                if (this.matDrawer && this.matDrawer.opened) {
-                    this.matDrawer.close();
-                }
-            });
-
         this.members$ = this._memberService.memberLists$.pipe(
             takeUntil(this._unsubscribeAll),
             debounceTime(300)
         );
+
+        merge(this.statusControl.valueChanges)
+            .pipe(debounceTime(300))
+            .subscribe(() => {
+                this.fetchData();
+            });
     }
 
     onOpenCreate(): void {
-        this._router.navigate(['create'], {
-            relativeTo: this._activatedRoute,
-        });
-        setTimeout(() => this.matDrawer?.open(), 100);
+        // ใช้ absolute path เพื่อป้องกันปัญหา route ซ้อน
+        this._router.navigate(['/member/create']);
     }
 
     onOpenEdit(id: string): void {
-        this._router.navigate(['edit', id], {
-            relativeTo: this._activatedRoute,
-        });
-        setTimeout(() => this.matDrawer?.open(), 100);
+        // ใช้ absolute path เพื่อป้องกันปัญหา route ซ้อน
+        this._router.navigate(['/member/edit', id]);
     }
 
     onEdit(member: Member): void {
-        if (member.id) {
-            this.onOpenEdit(member.id);
-        }
+        this.onOpenEdit(member.id);
     }
 
     onDelete(member: Member): void {
@@ -118,7 +114,7 @@ export class MemberListComponent {
             .alertConfirm('ลบข้อมูล', 'คุณต้องการลบข้อมูลนี้ หรือไม่')
             .afterClosed()
             .subscribe((result: boolean) => {
-                if (result && member.id) {
+                if (result) {
                     this.deleteMember(member.id);
                 }
             });
@@ -136,7 +132,7 @@ export class MemberListComponent {
 
     onChangePage(event: PageEvent): void {
         this.currPage.limit = event.pageSize;
-        this.currPage.page = event.pageIndex + 1;
+        this.currPage.page = event.pageIndex + 1; // เพิ่ม +1 เพราะ paginator เริ่มที่ 0
         this.fetchData();
     }
 

@@ -7,28 +7,25 @@ import { MemberListComponent } from './list/list.component';
 
 export default [
     {
-        path: 'member',
+        path: '',
+        component: MemberComponent,
         children: [
             {
                 path: '',
-                loadComponent: () => import('./list/list.component').then(m => m.MemberListComponent),
-                resolve: {
-                    initialData: memberListsResolver,
-                },
+                component: MemberListComponent,
+                resolve: { initialData: memberListsResolver }
             },
             {
                 path: 'create',
-                loadComponent: () => import('./edit/edit.component').then(m => m.EditMemberComponent),
-                canDeactivate: [CanDeactivateUserEdit],
+                component: EditMemberComponent,
+                canDeactivate: [CanDeactivateUserEdit]
             },
             {
                 path: 'edit/:id',
-                loadComponent: () => import('./edit/edit.component').then(m => m.EditMemberComponent),
-                resolve: {
-                    initialData: memberResolver,
-                },
-                canDeactivate: [CanDeactivateUserEdit],
-            },
-        ],
-    },
+                component: EditMemberComponent,
+                resolve: { initialData: memberResolver },
+                canDeactivate: [CanDeactivateUserEdit]
+            }
+        ]
+    }
 ] as Routes;

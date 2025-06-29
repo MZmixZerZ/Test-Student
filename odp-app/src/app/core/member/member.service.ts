@@ -10,7 +10,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Injectable({ providedIn: 'root' })
 export class MemberService {
-    private _baseMemberUrl = '/api/members';
+    private _baseMemberUrl = '/api/member';
 
     readonly apiUrl = {
         memberUrl: this._baseMemberUrl,
@@ -42,15 +42,15 @@ export class MemberService {
             params: param.toHttpParams()
         };
         return this._httpClient.get<PageResponse<Member[]>>(this.apiUrl.memberUrl, options).pipe(
-            tap((member) => {
-                this._memberLists.next(member);
+            tap((memberList) => {
+                this._memberLists.next(memberList);
             })
         );
     }
 
     getMemberById(id: string): Observable<Member> {
         return this._httpClient.get<Response<Member>>(this.apiUrl.memberWithIdUrl(id)).pipe(
-            map((m: Response<Member>) => m.item),
+            map((res: Response<Member>) => res.item),
             tap((member) => {
                 this._member.next(member);
             })

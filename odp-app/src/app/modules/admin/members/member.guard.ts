@@ -26,7 +26,9 @@ export const CanDeactivateUserEdit = (
   }
 
   
-  component.onClose();
-  return true;
+  return component.closeDrawer().then(() => {
+    memberService.member = null;
+    return true
+  });
   
 };

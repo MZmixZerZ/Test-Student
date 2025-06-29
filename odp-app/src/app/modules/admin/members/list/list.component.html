@@ -1,7 +1,8 @@
 <div class="absolute inset-0 flex overflow-hidden">
     <mat-drawer-container class="bg-card h-full flex-auto dark:bg-transparent">
         <!-- Drawer -->
-        <mat-drawer #matDrawer mode="over" position="end" class="md:w-160 dark:bg-gray-900">
+        <mat-drawer class="w-full dark:bg-gray-900 md:w-160" [mode]="drawerMode" [opened]="false" [position]="'end'"
+            [disableClose]="true" #matDrawer>
             <router-outlet></router-outlet>
         </mat-drawer>
 
@@ -14,6 +15,8 @@
                 </div>
 
                 <div class="flex flex-auto items-center justify-end gap-x-2">
+                
+
                     <div class="w-auto">
                         <button mat-flat-button class="ml-4 w-auto bg-[#22c55e] rounded-lg text-white"
                             (click)="onOpenCreate()" name="create_user">
@@ -24,17 +27,20 @@
             </div>
             <mat-divider></mat-divider>
 
-            <ng-container *ngIf="members$ | async as memberResp">
-                <div class="sm:overflow-visible overflow-x-auto w-full">
-                    <app-table-member 
-                        [memberResp]="memberResp" 
-                        (edit)="onEdit($event)" 
-                        (delete)="onDelete($event)"
-                        (updateStatus)="onUpdateStatus($event)"
-                        (changePage)="onChangePage($event)">
-                    </app-table-member>
-                </div>
-            </ng-container>
+            @if((members$ | async); as memberResp){
+            <div class="sm:overflow-visible overflow-x-auto w-full">
+                <app-table-member 
+                    [memberResp]="memberResp" 
+                    (edit)="onEdit($event)" 
+                    (delete)="onDelete($event)"
+                    (updateStatus)="onUpdateStatus($event)"
+                    (changePage)="onChangePage($event)"
+                >
+                </app-table-member>
+            </div>
+
+            }
+
         </mat-drawer-content>
     </mat-drawer-container>
 </div>

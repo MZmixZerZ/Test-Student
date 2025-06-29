@@ -115,9 +115,7 @@ export const appRoutes: Route[] = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
-        resolve: {
-            initialData: initialDataResolver,
-        },
+        resolve: { initialData: initialDataResolver },
         children: [
             {
                 path: 'dashboards',
@@ -144,11 +142,11 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/admin/user/user.routes'),
             },
+           
             {
                 path: 'member',
-                loadComponent: () => import('./modules/admin/members/list/list.component').then(m => m.MemberListComponent)
+                loadChildren: () => import('app/modules/admin/members/member.routes'),
             },
-            ...memberRoutes,
         ],
     },
 ];
