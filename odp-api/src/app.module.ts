@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { PersonModule } from './person/person.module';
 import { LineController } from './line/line.controller';
 import { LineService } from './line/line.service';
+import { MemberModule } from './member/member.module';
 
 dotenv.config(); // โหลดตัวแปรจากไฟล์ .env ก่อน
 
@@ -20,7 +21,8 @@ dotenv.config(); // โหลดตัวแปรจากไฟล์ .env ก
       signOptions: { expiresIn: '1h' },
     }),
     AuthModule,
-    PersonModule, // ต้อง import PersonModule เพื่อให้ LineService ใช้ PersonRepository ได้
+    PersonModule,
+    MemberModule, // ต้อง import PersonModule เพื่อให้ LineService ใช้ PersonRepository ได้
   ],
   controllers: [
     LineController,
