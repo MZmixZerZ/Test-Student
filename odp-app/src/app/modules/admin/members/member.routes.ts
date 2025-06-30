@@ -2,10 +2,9 @@ import { Routes } from '@angular/router';
 import { CanDeactivateUserEdit } from './member.guard';
 import { memberListsResolver, memberResolver } from './member.resolver';
 import { MemberComponent } from './member.component';
-import { EditMemberComponent } from './edit/edit.component';
 import { MemberListComponent } from './list/list.component';
 
-export default [
+export const MEMBER_ROUTES: Routes = [
     {
         path: '',
         component: MemberComponent,
@@ -17,15 +16,15 @@ export default [
             },
             {
                 path: 'create',
-                component: EditMemberComponent,
-                canDeactivate: [CanDeactivateUserEdit]
+                component: MemberListComponent,
+                data: { openDrawer: 'create' }
             },
             {
                 path: 'edit/:id',
-                component: EditMemberComponent,
-                resolve: { initialData: memberResolver },
-                canDeactivate: [CanDeactivateUserEdit]
+                component: MemberListComponent,
+                data: { openDrawer: 'edit' },
+                resolve: { initialData: memberResolver }
             }
         ]
     }
-] as Routes;
+];

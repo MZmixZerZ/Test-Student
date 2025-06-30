@@ -3,6 +3,7 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { MEMBER_ROUTES } from 'app/modules/admin/members/member.routes';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -148,7 +149,7 @@ export const appRoutes: Route[] = [
                 path: 'members',
                 loadChildren: () =>
                     import('app/modules/admin/members/member.routes').then(
-                        (m) => m.default
+                        (m) => m.MEMBER_ROUTES
                     ),
             },
         ],

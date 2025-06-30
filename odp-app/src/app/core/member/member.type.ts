@@ -1,5 +1,9 @@
 export interface Member
 {
     id: string;
-    name: string;
+    memberId: string;
+    idCard: string;
+    organization: string;
+    contactPerson: string;
+    contactPhone: string;
 }

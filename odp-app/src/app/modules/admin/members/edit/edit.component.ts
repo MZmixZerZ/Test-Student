@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Inject, Optional, SkipSelf } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -26,11 +26,13 @@ import { CreateMemberDto } from 'app/core/member/dto/create-member.dto';
 import { UpdateMemberDto } from 'app/core/member/dto/update-member.dto';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { MemberListComponent } from '../list/list.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-member',
     standalone: true,
     imports: [
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         MatButtonModule,
@@ -50,19 +52,19 @@ import { MemberListComponent } from '../list/list.component';
 })
 export class EditMemberComponent implements OnInit {
     isEdit: boolean = false;
-    initForm: FormGroup = null;
+    initForm: FormGroup;
     memberId: string;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     disableSave: boolean = false;
 
     get name() {
-        return this.initForm.get('name');
+        return this.initForm?.get('name');
     }
 
     constructor(
         private _formBuilder: FormBuilder,
-        private _listMemberComponent: MemberListComponent,
+        @Optional() @SkipSelf() private _listMemberComponent: MemberListComponent,
         private _router: Router,
         private _route: ActivatedRoute,
         private _memberService: MemberService,
@@ -74,19 +76,29 @@ export class EditMemberComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._listMemberComponent.matDrawer.open();
+        // สร้างฟอร์มให้ตรงกับ DTO
+        this.initForm = this._formBuilder.group({
+            memberId: [''],
+            idCard: [''],
+            organization: [''],
+            contactPerson: [''],
+            contactPhone: [''],
+        });
 
+        // ถ้ามีข้อมูล member (กรณีแก้ไข) ให้ set ค่าใหม่
         this._memberService.member$
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe((resp: Member) => {
-                this.initForm = this.initialForm(resp);
+                if (resp) {
+                    this.initForm.patchValue({
+                        memberId: resp.memberId || '',
+                        idCard: resp.idCard || '',
+                        organization: resp.organization || '',
+                        contactPerson: resp.contactPerson || '',
+                        contactPhone: resp.contactPhone || '',
+                    });
+                }
             });
-    }
-
-    initialForm(member?: Member): FormGroup {
-        return this._formBuilder.group({
-            name: [member?.name || '', [Validators.required]],
-        });
     }
 
     onSave(): void {
@@ -105,7 +117,9 @@ export class EditMemberComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
                 next: () => {
-                    this._listMemberComponent.fetchData();
+                    if (this._listMemberComponent) {
+                        this._listMemberComponent.fetchData();
+                    }
                     this.onClose();
                     this._fuseConfirmationService.alertSuccess();
                 },
@@ -122,7 +136,9 @@ export class EditMemberComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe({
                 next: () => {
-                    this._listMemberComponent.fetchData();
+                    if (this._listMemberComponent) {
+                        this._listMemberComponent.fetchData();
+                    }
                     this.onClose();
                     this._fuseConfirmationService.alertSuccess();
                 },
@@ -134,12 +150,17 @@ export class EditMemberComponent implements OnInit {
     }
 
     closeDrawer(): Promise<MatDrawerToggleResult> {
-        return this._listMemberComponent.matDrawer.close();
+        if (this._listMemberComponent && this._listMemberComponent.matDrawer) {
+            return this._listMemberComponent.matDrawer.close();
+        }
+        return Promise.resolve(null);
     }
 
     onClose(): void {
-        // กลับไปหน้ารายการสมาชิกแบบ absolute path ป้องกันปัญหา route ซ้อน
-        this._router.navigate(['/member']);
+        if (this._listMemberComponent && this._listMemberComponent.matDrawer) {
+            this._listMemberComponent.matDrawer.close();
+        }
+        // ไม่ต้อง fetchData ซ้ำซ้อน เพราะปุ่มบันทึก (create/update) จะ fetchData ให้อยู่แล้ว
     }
 
     ngOnDestroy(): void {

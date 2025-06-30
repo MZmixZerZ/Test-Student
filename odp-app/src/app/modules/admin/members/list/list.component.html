@@ -3,7 +3,7 @@
         <!-- Drawer -->
         <mat-drawer class="w-full dark:bg-gray-900 md:w-160" [mode]="drawerMode" [opened]="false" [position]="'end'"
             [disableClose]="true" #matDrawer>
-            <router-outlet></router-outlet>
+            <app-edit-member></app-edit-member>
         </mat-drawer>
 
         <mat-drawer-content class="flex w-full flex-col gap-y-4 overflow-auto p-6">
@@ -27,20 +27,17 @@
             </div>
             <mat-divider></mat-divider>
 
-            @if((members$ | async); as memberResp){
-            <div class="sm:overflow-visible overflow-x-auto w-full">
-                <app-table-member 
-                    [memberResp]="memberResp" 
-                    (edit)="onEdit($event)" 
-                    (delete)="onDelete($event)"
-                    (updateStatus)="onUpdateStatus($event)"
-                    (changePage)="onChangePage($event)"
-                >
-                </app-table-member>
-            </div>
-
-            }
-
+            <ng-container *ngIf="members$ | async as memberResp">
+                <div class="sm:overflow-visible overflow-x-auto w-full">
+                    <app-table-member 
+                        [memberResp]="memberResp" 
+                        (edit)="onEdit($event)" 
+                        (delete)="onDelete($event)"
+                        (updateStatus)="onUpdateStatus($event)"
+                        (changePage)="onChangePage($event)">
+                    </app-table-member>
+                </div>
+            </ng-container>
         </mat-drawer-content>
     </mat-drawer-container>
 </div>

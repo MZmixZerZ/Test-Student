@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -30,6 +30,7 @@ import { Observable, Subject, debounceTime, merge, takeUntil } from 'rxjs';
 import { TableMemberComponent } from '../table/table.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UpdateMemberDto } from 'app/core/member/dto/update-member.dto';
+import { EditMemberComponent } from '../edit/edit.component';
 
 @Component({
     selector: 'member-list',
@@ -50,14 +51,15 @@ import { UpdateMemberDto } from 'app/core/member/dto/update-member.dto';
         MatTabsModule,
         MatDatepickerModule,
         TableMemberComponent,
-        MatTooltipModule
+        MatTooltipModule,
+        EditMemberComponent // เพิ่ม EditMemberComponent ใน imports
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.scss',
 })
-export class MemberListComponent {
+export class MemberListComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
-    
+
     isShowReset: boolean = false;
     showLoading = {
         search: false,
@@ -95,14 +97,26 @@ export class MemberListComponent {
             });
     }
 
+    ngOnInit(): void {
+        this._activatedRoute.data.subscribe(data => {
+            if (data['openDrawer']) {
+                setTimeout(() => this.matDrawer.open(), 0);
+            }
+        });
+    }
+
     onOpenCreate(): void {
-        // ใช้ absolute path เพื่อป้องกันปัญหา route ซ้อน
-        this._router.navigate(['/member/create']);
+        const currentUrl = this._router.url;
+        if (!currentUrl.endsWith('/create')) {
+            this._router.navigate(['create'], { relativeTo: this._activatedRoute, queryParamsHandling: 'preserve' });
+        } else if (this.matDrawer) {
+            this.matDrawer.open();
+        }
     }
 
     onOpenEdit(id: string): void {
-        // ใช้ absolute path เพื่อป้องกันปัญหา route ซ้อน
-        this._router.navigate(['/member/edit', id]);
+        // ใช้ relative path และ preserve query params เพื่อรองรับ routing drawer แบบ persons
+        this._router.navigate(['edit', id], { relativeTo: this._activatedRoute, queryParamsHandling: 'preserve' });
     }
 
     onEdit(member: Member): void {

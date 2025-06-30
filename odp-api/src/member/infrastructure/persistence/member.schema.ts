@@ -1,24 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { MemberEntity } from 'src/member/domain/entities/member.entity';
 
 @Schema({ timestamps: true })
-export class Member extends Document {
-    @Prop({ required: true })
+export class Member extends MemberEntity {
+    @Prop({ type: String, required: true }) // ให้ user กรอกเอง เหมือน n_id ของ person
     memberId: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     idCard: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     organization: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     contactPerson: string;
 
-    @Prop({ required: true })
+    @Prop({ type: String, required: true })
     contactPhone: string;
-
-    // สามารถเพิ่ม static method หรือ virtual field ได้ที่นี่ถ้าต้องการ
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);
