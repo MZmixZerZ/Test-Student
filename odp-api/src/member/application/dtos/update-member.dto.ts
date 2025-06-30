@@ -5,7 +5,7 @@ export class UpdateMemberDto {
   @ApiPropertyOptional({ description: 'Member ID (unique/increment)', example: 'M0001' })
   @IsString()
   @IsOptional()
-  memberId?: string;
+  memberid?: string;
 
   @ApiPropertyOptional({ description: 'ID Card', example: '1234567890123' })
   @IsString()

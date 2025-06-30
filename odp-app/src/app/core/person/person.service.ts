@@ -11,6 +11,9 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PersonService {
+    findAll() {
+        throw new Error('Method not implemented.');
+    }
     private _basePersonUrl = `${environment.apiUrl}/persons`;
 
     readonly apiUrl = {

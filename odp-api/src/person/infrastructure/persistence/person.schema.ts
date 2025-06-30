@@ -4,6 +4,18 @@ import { PersonEntity } from 'src/person/domain/entities/person.entity';
 
 @Schema()
 export class Person extends PersonEntity {
+  @Prop({ type: String, required: true, unique: true })
+  n_id: string;
+
+  @Prop({ type: String, required: true })
+  name: string;
+
+  @Prop({ type: String })
+  surname: string;
+
+  @Prop({ type: Date })
+  dob: Date;
+
   @Prop({ type: String, required: true })
   phone: string;
 

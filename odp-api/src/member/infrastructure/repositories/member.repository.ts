@@ -45,13 +45,13 @@ export class MemberRepository implements MemberRepositoryInterface {
     };
 
     const filter: any = {};
-    if (companyId) {
-      filter.organization = companyId;
-    }
+    // if (companyId) {
+    //   filter.organization = companyId;
+    // }
 
     if (keyword) {
       filter.$or = [
-        { memberId: { $regex: CommonUtil.escapeRegExp(keyword), $options: 'i' } },
+        { memberid: { $regex: CommonUtil.escapeRegExp(keyword), $options: 'i' } },
         { idCard: { $regex: CommonUtil.escapeRegExp(keyword), $options: 'i' } },
         { organization: { $regex: CommonUtil.escapeRegExp(keyword), $options: 'i' } },
         { contactPerson: { $regex: CommonUtil.escapeRegExp(keyword), $options: 'i' } },

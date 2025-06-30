@@ -5,7 +5,7 @@ import { MemberEntity } from 'src/member/domain/entities/member.entity';
 @Schema({ timestamps: true })
 export class Member extends MemberEntity {
     @Prop({ type: String, required: true }) // ให้ user กรอกเอง เหมือน n_id ของ person
-    memberId: string;
+    memberid: string;
 
     @Prop({ type: String, required: true })
     idCard: string;
