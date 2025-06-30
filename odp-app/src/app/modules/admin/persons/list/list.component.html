@@ -1,7 +1,7 @@
 <div class="absolute inset-0 flex overflow-hidden">
   <mat-drawer-container>
     <!-- Drawer -->
-    <mat-drawer #matDrawer [opened]="false" mode="over" position="end">
+    <mat-drawer #matDrawer [opened]="isDrawerOpened" mode="over" position="end">
       <router-outlet></router-outlet>
     </mat-drawer>
 

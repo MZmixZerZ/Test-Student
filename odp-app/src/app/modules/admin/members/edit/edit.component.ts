@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Inject, Optional, SkipSelf } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Inject, Optional, SkipSelf, Input } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -58,6 +58,8 @@ export class EditMemberComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     disableSave: boolean = false;
 
+    @Input() member: Member | null = null;
+
     get name() {
         return this.initForm?.get('name');
     }
@@ -92,21 +94,12 @@ export class EditMemberComponent implements OnInit {
         });
     }
 
-    //     // ถ้ามีข้อมูล member (กรณีแก้ไข) ให้ set ค่าใหม่
-    //     this._memberService.member$
-    //         .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
-    //         .subscribe((resp: Member) => {
-    //             if (resp) {
-    //                 this.initForm.patchValue({
-    //                     memberid: resp.memberid || '',
-    //                     idCard: resp.idCard || '',
-    //                     organization: resp.organization || '',
-    //                     contactPerson: resp.contactPerson || '',
-    //                     contactPhone: resp.contactPhone || '',
-    //                 });
-    //             }
-    //         });
-    // }
+    ngOnChanges() {
+        if (this.member) {
+            this.initForm.patchValue(this.member);
+            this.isEdit = true;
+        }
+    }
 
     onSave(): void {
         this.disableSave = true;
@@ -164,10 +157,12 @@ export class EditMemberComponent implements OnInit {
     }
 
     onClose(): void {
+        // ปิด Drawer
         if (this._listMemberComponent && this._listMemberComponent.matDrawer) {
             this._listMemberComponent.matDrawer.close();
         }
-        // ไม่ต้อง fetchData ซ้ำซ้อน เพราะปุ่มบันทึก (create/update) จะ fetchData ให้อยู่แล้ว
+        // กลับไป route หลัก (เช่น /members)
+        this._router.navigateByUrl('/members');
     }
 
     ngOnDestroy(): void {

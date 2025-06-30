@@ -77,6 +77,8 @@ export class PersonListComponent {
     ];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    isDrawerOpened = false;
+
     constructor(
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
@@ -86,10 +88,11 @@ export class PersonListComponent {
         this._router.events.pipe(
             filter(event => event instanceof NavigationEnd)
         ).subscribe((event: NavigationEnd) => {
-            if (event.urlAfterRedirects.endsWith('/members')) {
-                if (this.matDrawer && this.matDrawer.opened) {
-                    this.matDrawer.close();
-                }
+            // ปิด Drawer เมื่อไม่ได้อยู่ที่ /edit หรือ /create
+            if (!/\/(edit|create)/.test(event.urlAfterRedirects)) {
+                this.isDrawerOpened = false;
+            } else {
+                this.isDrawerOpened = true;
             }
         });
 
@@ -177,6 +180,10 @@ export class PersonListComponent {
             .getPersonLists(this.getParameter())
             .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
             .subscribe();
+    }
+
+    onClose(): void {
+        this._router.navigate(['../'], { relativeTo: this._activatedRoute });
     }
 
     ngOnDestroy(): void {

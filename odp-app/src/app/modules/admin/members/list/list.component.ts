@@ -79,6 +79,11 @@ export class MemberListComponent implements OnInit {
     members$: Observable<PageResponse<Member[]>>;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    isEditDrawerOpen = false;
+    selectedMember: Member | null = null;
+
+    drawerOpened = false;
+
     constructor(
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
@@ -100,7 +105,11 @@ export class MemberListComponent implements OnInit {
     ngOnInit(): void {
         this._activatedRoute.data.subscribe(data => {
             if (data['openDrawer']) {
+                this.drawerOpened = true;
                 setTimeout(() => this.matDrawer.open(), 0);
+            } else {
+                this.drawerOpened = false;
+                setTimeout(() => this.matDrawer.close(), 0);
             }
         });
     }
@@ -115,7 +124,6 @@ export class MemberListComponent implements OnInit {
     }
 
     onOpenEdit(id: string): void {
-        // ใช้ relative path และ preserve query params เพื่อรองรับ routing drawer แบบ persons
         this._router.navigate(['edit', id], { relativeTo: this._activatedRoute, queryParamsHandling: 'preserve' });
     }
 
@@ -176,5 +184,25 @@ export class MemberListComponent implements OnInit {
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+
+    onEditMember(member: Member) {
+        this.onOpenEdit(member.id);
+    }
+
+    closeEditDrawer() {
+        this.isEditDrawerOpen = false;
+        this.selectedMember = null;
+    }
+
+    onDeleteMember(member: Member) {
+        this._fuseConfirmationService
+            .alertConfirm('ลบข้อมูล', 'คุณต้องการลบข้อมูลนี้ หรือไม่')
+            .afterClosed()
+            .subscribe((result: boolean) => {
+            if (result) {
+                this.deleteMember(member.id);
+            }
+            });
     }
 }

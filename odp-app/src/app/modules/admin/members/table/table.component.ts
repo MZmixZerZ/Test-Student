@@ -56,8 +56,8 @@ export class TableMemberComponent implements OnInit, OnChanges {
     @ViewChildren('selectStatus') selectStatues: QueryList<MatSelect>;
 
     @Input() memberResp: PageResponse<Member[]>;
-    @Output() delete: EventEmitter<Member> = new EventEmitter<Member>(null);
-    @Output() edit: EventEmitter<Member> = new EventEmitter<Member>(null);
+    @Output() delete = new EventEmitter<Member>();
+    @Output() edit = new EventEmitter<Member>();
     @Output() updateStatus: EventEmitter<{
         id: string;
         body: UpdateMemberDto;
@@ -66,7 +66,7 @@ export class TableMemberComponent implements OnInit, OnChanges {
         null
     );
 
-    displayedColumns: string[] = ['memberid', 'idCard', 'organization', 'contactPerson', 'contactPhone', 'edit'];
+    displayedColumns: string[] = ['memberid', 'idCard', 'organization', 'contactPerson', 'contactPhone', 'actions'];
     dataSource: Member[] = [];
 
     Person: { idCard: string; name: string }[] = [];
@@ -116,5 +116,13 @@ export class TableMemberComponent implements OnInit, OnChanges {
         const key = String(idCard).trim();
         console.log('Lookup idCard:', key, '=>', this.personNameCache[key]);
         return this.personNameCache[key] || 'ไม่พบชื่อ';
+    }
+
+    onEdit(member: Member) {
+        this.edit.emit(member);
+    }
+
+    onDelete(member: Member) {
+        this.delete.emit(member);
     }
 }
