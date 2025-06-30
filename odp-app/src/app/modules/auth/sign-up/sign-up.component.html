@@ -45,7 +45,7 @@
                     <mat-label>ชื่อ-นามสกุล (ผู้ดูแลระบบ/เจ้าของบริษัท)</mat-label>
                     <input id="fullName" matInput [formControlName]="'fullName'" />
                     @if (signUpForm.get('fullName').hasError('required')) {
-                        <mat-error> โปรดระบุ ชื่อ-นามสกุล </mat-error>
+                        <mat-error> โปรดกรอก ชื่อ-นามสกุล </mat-error>
                     }
                 </mat-form-field>
 
@@ -54,11 +54,11 @@
                     <mat-label>อีเมล (สำหรับการเข้าระบบ)</mat-label>
                     <input id="email" matInput [formControlName]="'email'" />
                     @if (signUpForm.get('email').hasError('required')) {
-                        <mat-error> โปรดระบุ อีเมล </mat-error>
+                        <mat-error> โปรดกรอก อีเมล </mat-error>
                     }
                     @if (signUpForm.get('email').hasError('email')) {
                         <mat-error>
-                            โปรดระบุ อีเมลที่ถูกต้อง
+                            โปรดกรอก อีเมลที่ถูกต้อง
                         </mat-error>
                     }
                 </mat-form-field>
@@ -96,7 +96,7 @@
                             ></mat-icon>
                         }
                     </button>
-                    <mat-error> โปรดระบุ รหัสผ่าน </mat-error>
+                    <mat-error> โปรดกรอก รหัสผ่าน </mat-error>
                 </mat-form-field>
 
                 <!-- Company field -->
@@ -108,7 +108,7 @@
                         [formControlName]="'companyName'"
                     />
                     @if (signUpForm.get('companyName').hasError('required')) {
-                        <mat-error> โปรดระบุ ชื่อบริษัท/นิติบุคคล </mat-error>
+                        <mat-error> โปรดกรอก ชื่อบริษัท/นิติบุคคล </mat-error>
                     }
                 </mat-form-field>
 
@@ -121,7 +121,7 @@
                         [formControlName]="'companyRegisterNo'"
                     />
                     @if (signUpForm.get('companyRegisterNo').hasError('required')) {
-                        <mat-error> โปรดระบุ หมายเลขทะเบียนบริษัท </mat-error>
+                        <mat-error> โปรดกรอก หมายเลขทะเบียนบริษัท </mat-error>
                     }
                 </mat-form-field>
 
@@ -196,11 +196,11 @@
         <div class="relative z-10 w-full max-w-2xl">
             <div class="text-7xl font-bold leading-none text-gray-100">
                 <div>ยินดีต้อนรับสู่</div>
-                <div>ระบบบริหารจัดการ</div>
-                <div>[System Name]</div>
+                <div>One Data Platform</div>
+                <div>ระบบจัดการข้อมูลนักเรียนและบุคลากร</div>
             </div>
             <div class="mt-6 text-lg leading-6 tracking-tight text-gray-400">
-                แพลตฟอร์มของเราช่วยให้คุณสามารถ[System Objective] และเข้าถึงข้อมูลที่สำคัญของบริษัทได้อย่างสะดวกและปลอดภัย
+                แพลตฟอร์มนี้ช่วยให้โรงเรียนสามารถบริหารจัดการข้อมูลสมาชิกและข้อมูลบุคคล ได้อย่างเป็นระบบ ช่วยสนับสนุนการทำงานของครูและเจ้าหน้าที่ด้วยข้อมูลที่แม่นยำ ปลอดภัย และเข้าถึงได้ง่าย
             </div>
         </div>
     </div>

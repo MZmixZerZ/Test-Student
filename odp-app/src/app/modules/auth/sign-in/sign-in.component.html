@@ -16,9 +16,9 @@
             >
             เข้าสู่ระบบ
             </div>
-            
 
-            
+
+
             <!-- Alert -->
             @if (showAlert) {
                 <fuse-alert
@@ -39,11 +39,11 @@
                     <mat-label>อีเมล</mat-label>
                     <input id="username" matInput [formControlName]="'username'" />
                     @if (signInForm.get('username').hasError('required')) {
-                        <mat-error> กรุณาระบบ อีเมล </mat-error>
+                        <mat-error> กรุณากรอก อีเมล </mat-error>
                     }
                     @if (signInForm.get('username').hasError('email')) {
                         <mat-error>
-                            กรุณาระบบ อีเมล ให้ถูกต้อง
+                            กรุณากรอก "อีเมล" ให้ถูกต้อง
                         </mat-error>
                     }
                 </mat-form-field>
@@ -81,7 +81,7 @@
                             ></mat-icon>
                         }
                     </button>
-                    <mat-error> กรุณาระบบ รหัสผ่าน</mat-error>
+                    <mat-error> กรุณากรอก รหัสผ่าน</mat-error>
                 </mat-form-field>
 
                 <!-- Actions -->
@@ -152,11 +152,11 @@
         <div class="relative z-10 w-full max-w-2xl">
             <div class="text-7xl font-bold leading-none text-gray-100">
                 <div>ยินดีต้อนรับสู่</div>
-                <div>ระบบบริหารจัดการ</div>
-                <div>[System Name]</div>
+                <div>One Data Platform</div>
+                <div>ระบบจัดการข้อมูลนักเรียนและบุคลากร</div>
             </div>
             <div class="mt-6 text-lg leading-6 tracking-tight text-gray-400">
-                แพลตฟอร์มของเราช่วยให้คุณสามารถ[System Objective] และเข้าถึงข้อมูลที่สำคัญของบริษัทได้อย่างสะดวกและปลอดภัย
+                แพลตฟอร์มนี้ช่วยให้โรงเรียนสามารถบริหารจัดการข้อมูลสมาชิกและข้อมูลบุคคล ได้อย่างเป็นระบบ ช่วยสนับสนุนการทำงานของครูและเจ้าหน้าที่ด้วยข้อมูลที่แม่นยำ ปลอดภัย และเข้าถึงได้ง่าย
             </div>
         </div>
     </div>
