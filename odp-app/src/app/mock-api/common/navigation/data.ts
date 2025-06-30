@@ -77,6 +77,6 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         title: 'สมาชิก',
         type: 'basic',
         icon: 'heroicons_outline:identification',
-        link: '/member', // ตรวจสอบว่ามี route /member จริงใน app.routes.ts ด้วย
+        link: '/members', // ตรวจสอบว่ามี route /member จริงใน app.routes.ts ด้วย
     },
 ];
