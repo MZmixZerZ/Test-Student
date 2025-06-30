@@ -86,7 +86,7 @@ export class PersonListComponent {
         this._router.events.pipe(
             filter(event => event instanceof NavigationEnd)
         ).subscribe((event: NavigationEnd) => {
-            if (event.urlAfterRedirects.endsWith('/persons')) {
+            if (event.urlAfterRedirects.endsWith('/members')) {
                 if (this.matDrawer && this.matDrawer.opened) {
                     this.matDrawer.close();
                 }
