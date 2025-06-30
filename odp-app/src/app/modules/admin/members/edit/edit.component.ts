@@ -53,7 +53,7 @@ import { CommonModule } from '@angular/common';
 export class EditMemberComponent implements OnInit {
     isEdit: boolean = false;
     initForm: FormGroup;
-    memberId: string;
+    memberid: string;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     disableSave: boolean = false;
@@ -71,41 +71,48 @@ export class EditMemberComponent implements OnInit {
         private _fuseConfirmationService: FuseConfirmationService,
         private cdr: ChangeDetectorRef
     ) {
-        this.memberId = this._route.snapshot.paramMap.get('id');
-        this.isEdit = !!this.memberId;
+        this.memberid = this._route.snapshot.paramMap.get('id');
+        this.isEdit = !!this.memberid;
     }
 
     ngOnInit(): void {
         // สร้างฟอร์มให้ตรงกับ DTO
-        this.initForm = this._formBuilder.group({
-            memberId: [''],
-            idCard: [''],
-            organization: [''],
-            contactPerson: [''],
-            contactPhone: [''],
+        this._route.data.subscribe(({ initialData }) => {
+            this.initForm = this.initialForm(initialData || undefined);
         });
-
-        // ถ้ามีข้อมูล member (กรณีแก้ไข) ให้ set ค่าใหม่
-        this._memberService.member$
-            .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
-            .subscribe((resp: Member) => {
-                if (resp) {
-                    this.initForm.patchValue({
-                        memberId: resp.memberId || '',
-                        idCard: resp.idCard || '',
-                        organization: resp.organization || '',
-                        contactPerson: resp.contactPerson || '',
-                        contactPhone: resp.contactPhone || '',
-                    });
-                }
-            });
     }
+
+    initialForm(member?: Member): FormGroup {
+        return this._formBuilder.group({
+            memberid: [member?.memberid || '', [Validators.required]],
+            idCard: [member?.idCard || '', [Validators.required]],
+            organization: [member?.organization || '', [Validators.required]],
+            contactPerson: [member?.contactPerson || '', [Validators.required]],
+            contactPhone: [member?.contactPhone || '', [Validators.required]],
+        });
+    }
+
+    //     // ถ้ามีข้อมูล member (กรณีแก้ไข) ให้ set ค่าใหม่
+    //     this._memberService.member$
+    //         .pipe(takeUntil(this._unsubscribeAll), debounceTime(300))
+    //         .subscribe((resp: Member) => {
+    //             if (resp) {
+    //                 this.initForm.patchValue({
+    //                     memberid: resp.memberid || '',
+    //                     idCard: resp.idCard || '',
+    //                     organization: resp.organization || '',
+    //                     contactPerson: resp.contactPerson || '',
+    //                     contactPhone: resp.contactPhone || '',
+    //                 });
+    //             }
+    //         });
+    // }
 
     onSave(): void {
         this.disableSave = true;
         const payload = this.initForm.getRawValue();
         if (this.isEdit) {
-            this.update(this.memberId, payload);
+            this.update(this.memberid, payload);
         } else {
             this.create(payload);
         }

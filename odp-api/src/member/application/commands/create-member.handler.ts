@@ -17,9 +17,9 @@ export class CreateMemberHandler
   async execute(command: CreateMemberCommand): Promise<ResponseDto<MemberEntity>> {
     const { createMemberDto, createdBy } = command;
 
-    // ตรวจสอบซ้ำด้วย memberId (unique)
+    // ตรวจสอบซ้ำด้วย memberid (unique)
     const existingMember = await this.memberRepository.findByName(
-      createMemberDto.memberId,
+      createMemberDto.memberid,
     );
     if (existingMember) {
       throw new BadRequestException('Member ID already exists');

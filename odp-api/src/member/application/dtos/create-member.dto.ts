@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
 
 export class CreateMemberDto {
-  @ApiProperty({ description: 'Member ID (unique/increment)', example: 'M0001' })
+  @ApiProperty({ description: 'Member ID', example: 'M0001' })
   @IsString()
-  memberId: string;
+  memberid: string;
 
   @ApiProperty({ description: 'ID Card', example: '1234567890123' })
   @IsString()

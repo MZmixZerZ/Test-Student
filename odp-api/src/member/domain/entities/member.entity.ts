@@ -1,4 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
+import { Person } from 'src/person/infrastructure/persistence/person.schema';
+
 
 export class MemberEntity {
   @Expose({ name: 'id' })
@@ -8,9 +10,10 @@ export class MemberEntity {
   public id: string;
 
   @Expose()
-  memberId: string; // รหัสสมาชิก
+  memberid: string; // รหัสสมาชิก
 
   @Expose()
+  // @Transform(({ obj }) => obj.person?.idCard ?? null, { toClassOnly: true })
   idCard: string; // เลขบัตรประชาชน
 
   @Expose()
