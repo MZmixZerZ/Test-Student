@@ -26,14 +26,10 @@ import { MemberSchema } from './infrastructure/persistence/member.schema';
     DeleteMemberHandler,
     GetAllMembersHandler,
     GetMemberByIdHandler,
-    {
-      provide: 'MemberRepository',
-      useClass: MemberRepository,
-    },
+    MemberRepository,
   ],
   exports: [
-    MongooseModule,
-    'MemberRepository',
+    MemberRepository,
   ],
 })
 export class MemberModule {}

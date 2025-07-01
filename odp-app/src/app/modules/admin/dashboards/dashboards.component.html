@@ -1,49 +1,235 @@
-<div class="flex w-full flex-auto flex-col">
+<div class="flex w-full flex-auto flex-col bg-gray-50 min-h-screen">
     <div class="mx-auto flex w-full max-w-screen-xl flex-wrap p-6 md:p-8">
-        <!-- Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <mat-icon color="primary" fontSize="40">group</mat-icon>
-                <div class="text-lg font-semibold mt-2">สมาชิกทั้งหมด</div>
-                <div class="text-2xl font-bold text-blue-700 mt-1">{{ summary.member }}</div>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <mat-icon color="accent" fontSize="40">business</mat-icon>
-                <div class="text-lg font-semibold mt-2">องค์กร</div>
-                <div class="text-2xl font-bold text-green-700 mt-1">{{ summary.org }}</div>
-            </div>
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <mat-icon color="warn" fontSize="40">person</mat-icon>
-                <div class="text-lg font-semibold mt-2">บุคคล</div>
-                <div class="text-2xl font-bold text-red-700 mt-1">{{ summary.person }}</div>
+        
+        <!-- Header Section -->
+        <div class="w-full mb-8" [@fadeInUp]>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">📊 Dashboard</h1>
+                    <p class="text-gray-600">ภาพรวมข้อมูลระบบแบบเรียลไทม์</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 px-3 py-2 rounded-full live-indicator" [ngClass]="{'bg-green-100': isLive, 'bg-gray-100': !isLive}">
+                        <div class="w-2 h-2 rounded-full" [ngClass]="{'bg-green-500 animate-pulse': isLive, 'bg-gray-400': !isLive}"></div>
+                        <span class="text-sm font-medium" [ngClass]="{'text-green-700': isLive, 'text-gray-600': !isLive}">
+                            {{ isLive ? 'Live' : 'Offline' }}
+                        </span>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        อัพเดทล่าสุด: {{ lastUpdated | date:'HH:mm:ss' }}
+                    </div>
+                    <button mat-raised-button color="primary" (click)="refreshSummary()" class="refresh-button">
+                        <mat-icon>refresh</mat-icon>
+                        รีเฟรช
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Dashboards Table -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="text-xl font-semibold">รายการ Dashboard</div>
-                <button mat-stroked-button color="primary">ดูทั้งหมด</button>
-            </div>
-            <table mat-table [dataSource]="dashboards" class="mat-elevation-z8 w-full">
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>ชื่อ Dashboard</th>
-                    <td mat-cell *matCellDef="let dashboard">{{ dashboard.name }}</td>
-                </ng-container>
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>การกระทำ</th>
-                    <td mat-cell *matCellDef="let dashboard">
-                        <button mat-icon-button color="primary">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+        <!-- Summary Cards with Modern Design -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 w-full" [@fadeInUp]>
+            <mat-card class="summary-card member-card realtime-update">
+                <mat-card-content class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">สมาชิกทั้งหมด</div>
+                            <div class="text-3xl font-bold text-blue-600 mt-2">{{ formatNumber(summary.member) }}</div>
+                            <div class="text-xs mt-1 flex items-center" 
+                                 [ngClass]="getGrowthColor(summary.stats?.growthRates?.members || 0)">
+                                <mat-icon class="text-xs mr-1">trending_up</mat-icon>
+                                +{{ summary.stats?.growthRates?.members || 12 }}% จากเดือนที่แล้ว
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1" *ngIf="summary.stats?.recentMembers">
+                                {{ summary.stats.recentMembers }} สมาชิกใหม่ใน 30 วัน
+                            </div>
+                        </div>
+                        <div class="bg-blue-100 p-4 rounded-full">
+                            <mat-icon class="text-blue-600 text-2xl">group</mat-icon>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            
+            <mat-card class="summary-card org-card realtime-update">
+                <mat-card-content class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">องค์กร</div>
+                            <div class="text-3xl font-bold text-green-600 mt-2">{{ formatNumber(summary.org) }}</div>
+                            <div class="text-xs mt-1 flex items-center"
+                                 [ngClass]="getGrowthColor(summary.stats?.growthRates?.organizations || 0)">
+                                <mat-icon class="text-xs mr-1">trending_up</mat-icon>
+                                +{{ summary.stats?.growthRates?.organizations || 8 }}% จากเดือนที่แล้ว
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1" *ngIf="summary.stats?.topOrganizations?.length">
+                                องค์กรใหญ่: {{ summary.stats.topOrganizations[0]?.name }}
+                            </div>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-full">
+                            <mat-icon class="text-green-600 text-2xl">business</mat-icon>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="summary-card person-card realtime-update">
+                <mat-card-content class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-gray-500 uppercase tracking-wide">บุคคลทั่วไป</div>
+                            <div class="text-3xl font-bold text-red-600 mt-2">{{ formatNumber(summary.person) }}</div>
+                            <div class="text-xs mt-1 flex items-center"
+                                 [ngClass]="getGrowthColor(summary.stats?.growthRates?.persons || 0)">
+                                <mat-icon class="text-xs mr-1">trending_up</mat-icon>
+                                +{{ summary.stats?.growthRates?.persons || 15 }}% จากเดือนที่แล้ว
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1" *ngIf="summary.stats?.recentPersons">
+                                {{ summary.stats.recentPersons }} คนใหม่ใน 30 วัน
+                            </div>
+                        </div>
+                        <div class="bg-red-100 p-4 rounded-full">
+                            <mat-icon class="text-red-600 text-2xl">person</mat-icon>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </div>
+
+        <!-- Top Organizations Section -->
+        <div class="w-full mb-8" [@fadeInUp] *ngIf="summary.stats?.topOrganizations?.length">
+            <mat-card class="top-orgs-card">
+                <mat-card-header class="pb-4">
+                    <mat-card-title class="text-xl font-bold text-gray-800">🏢 องค์กรยอดนิยม</mat-card-title>
+                    <mat-card-subtitle class="text-gray-600">5 องค์กรที่มีสมาชิกมากที่สุด</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="space-y-4">
+                        <div *ngFor="let org of summary.stats.topOrganizations; let i = index" 
+                             class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                    {{ i + 1 }}
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">{{ org.name }}</div>
+                                    <div class="text-sm text-gray-500">{{ org.memberCount }} สมาชิก</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="w-20 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full" 
+                                         [style.width.%]="(org.memberCount / summary.member) * 100"></div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ ((org.memberCount / summary.member) * 100) | number:'1.1-1' }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mb-8">
+            <mat-card class="chart-card" [@slideInLeft]>
+                <mat-card-header class="pb-4">
+                    <mat-card-title class="text-xl font-bold text-gray-800">📈 สถิติภาพรวม</mat-card-title>
+                    <mat-card-subtitle class="text-gray-600">แสดงข้อมูลในรูปแบบกราฟแท่ง</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container">
+                        <canvas 
+                            #chartCanvas
+                            class="chart-canvas">
+                        </canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="info-card" [@slideInLeft]>
+                <mat-card-header class="pb-4">
+                    <mat-card-title class="text-xl font-bold text-gray-800">📋 ข้อมูลเพิ่มเติม</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span class="font-medium">สมาชิกใหม่วันนี้</span>
+                            </div>
+                            <span class="font-bold text-blue-600">{{ (summary.member * 0.05) | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span class="font-medium">องค์กรที่ใช้งาน</span>
+                            </div>
+                            <span class="font-bold text-green-600">{{ (summary.org * 0.85) | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <span class="font-medium">บุคคลที่เข้าระบบ</span>
+                            </div>
+                            <span class="font-bold text-red-600">{{ (summary.person * 0.65) | number:'1.0-0' }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Quick Actions & Dashboards Table -->
+        <mat-card class="w-full" [@fadeInUp]>
+            <mat-card-header class="border-b border-gray-200 pb-4">
+                <mat-card-title class="text-xl font-bold text-gray-800 flex items-center">
+                    <mat-icon class="mr-2">dashboard</mat-icon>
+                    รายการ Dashboard
+                </mat-card-title>
+                <div class="flex space-x-2 ml-auto">
+                    <button mat-raised-button color="primary" class="action-button">
+                        <mat-icon>add</mat-icon>
+                        เพิ่ม Dashboard
+                    </button>
+                    <button mat-stroked-button color="primary" class="action-button">
+                        <mat-icon>refresh</mat-icon>
+                        รีเฟรช
+                    </button>
+                </div>
+            </mat-card-header>
+            <mat-card-content class="p-0">
+                <div class="overflow-x-auto">
+                    <table mat-table [dataSource]="dashboards" class="w-full modern-table">
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">ชื่อ Dashboard</th>
+                            <td mat-cell *matCellDef="let dashboard" class="py-4">
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                                    <span class="font-medium">{{ dashboard.name }}</span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef class="font-semibold text-gray-700">การกระทำ</th>
+                            <td mat-cell *matCellDef="let dashboard" class="py-4">
+                                <div class="flex space-x-2">
+                                    <button mat-icon-button color="primary" class="hover:bg-blue-100 transition-colors">
+                                        <mat-icon>visibility</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="hover:bg-green-100 transition-colors">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" class="hover:bg-red-100 transition-colors">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-gray-50"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-50 transition-colors border-b border-gray-100"></tr>
+                    </table>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>

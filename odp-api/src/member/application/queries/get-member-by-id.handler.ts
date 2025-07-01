@@ -1,17 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ResponseDto } from 'src/common/presentation/dtos/response.dto';
 import { GetMemberByIdQuery } from './get-member-by-id.query';
 import { MemberRepositoryInterface } from '../../domain/repositories/member.repository.interface';
 import { MemberEntity } from '../../domain/entities/member.entity';
+import { MemberRepository } from '../../infrastructure/repositories/member.repository';
 
 @QueryHandler(GetMemberByIdQuery)
 export class GetMemberByIdHandler
   implements IQueryHandler<GetMemberByIdQuery>
 {
   constructor(
-    @Inject('MemberRepository')
-    private readonly memberRepository: MemberRepositoryInterface,
+    private readonly memberRepository: MemberRepository,
   ) {}
 
   async execute(query: GetMemberByIdQuery): Promise<ResponseDto<MemberEntity>> {

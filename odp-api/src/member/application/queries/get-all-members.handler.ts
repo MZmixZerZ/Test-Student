@@ -1,17 +1,16 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllMembersQuery } from './get-all-members.query';
 import { MemberRepositoryInterface } from '../../domain/repositories/member.repository.interface';
-import { Inject } from '@nestjs/common';
 import { MemberEntity } from '../../domain/entities/member.entity';
 import { PaginatedResponseDto } from 'src/common/presentation/dtos/paginated-response.dto';
+import { MemberRepository } from '../../infrastructure/repositories/member.repository';
 
 @QueryHandler(GetAllMembersQuery)
 export class GetAllMembersHandler
   implements IQueryHandler<GetAllMembersQuery>
 {
   constructor(
-    @Inject('MemberRepository')
-    private readonly memberRepository: MemberRepositoryInterface,
+    private readonly memberRepository: MemberRepository,
   ) {}
 
   async execute(

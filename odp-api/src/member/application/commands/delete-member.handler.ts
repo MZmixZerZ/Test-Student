@@ -1,15 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteMemberCommand } from './delete-member.command';
 import { MemberRepositoryInterface } from '../../domain/repositories/member.repository.interface';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+import { MemberRepository } from '../../infrastructure/repositories/member.repository';
 
 @CommandHandler(DeleteMemberCommand)
 export class DeleteMemberHandler
   implements ICommandHandler<DeleteMemberCommand>
 {
   constructor(
-    @Inject('MemberRepository')
-    private readonly memberRepository: MemberRepositoryInterface,
+    private readonly memberRepository: MemberRepository,
   ) {}
 
   async execute(command: DeleteMemberCommand): Promise<void> {

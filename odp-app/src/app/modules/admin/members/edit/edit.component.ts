@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Inject, Optional, SkipSelf, Input } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
     FormBuilder,
     FormGroup,
@@ -49,6 +50,47 @@ import { CommonModule } from '@angular/common';
     ],
     templateUrl: './edit.component.html',
     styleUrl: './edit.component.scss',
+    animations: [
+        trigger('slideInFromRight', [
+            transition(':enter', [
+                style({ 
+                    transform: 'translateX(100%)', 
+                    opacity: 0 
+                }),
+                animate(
+                    '300ms ease-in-out',
+                    style({ 
+                        transform: 'translateX(0%)', 
+                        opacity: 1 
+                    })
+                ),
+            ]),
+            transition(':leave', [
+                animate(
+                    '300ms ease-in-out',
+                    style({ 
+                        transform: 'translateX(100%)', 
+                        opacity: 0 
+                    })
+                ),
+            ]),
+        ]),
+        trigger('fadeInUp', [
+            transition(':enter', [
+                style({ 
+                    transform: 'translateY(30px)', 
+                    opacity: 0 
+                }),
+                animate(
+                    '400ms 100ms ease-out',
+                    style({ 
+                        transform: 'translateY(0)', 
+                        opacity: 1 
+                    })
+                ),
+            ]),
+        ]),
+    ],
 })
 export class EditMemberComponent implements OnInit {
     isEdit: boolean = false;

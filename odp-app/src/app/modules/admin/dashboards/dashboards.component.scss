@@ -1,1 +1,175 @@
-/* Your styles here */
+:host {
+  .summary-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    &.member-card:hover {
+      border-left: 4px solid #3b82f6;
+    }
+
+    &.org-card:hover {
+      border-left: 4px solid #10b981;
+    }
+
+    &.person-card:hover {
+      border-left: 4px solid #ef4444;
+    }
+  }
+
+  .chart-card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    .chart-container {
+      height: 350px;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .chart-canvas {
+      max-height: 100%;
+    }
+  }
+
+  .info-card {
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .action-button {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .modern-table {
+    .mat-mdc-header-row {
+      background-color: #f9fafb;
+    }
+
+    .mat-mdc-row {
+      &:hover {
+        background-color: #f3f4f6;
+      }
+    }
+
+    .mat-mdc-cell, .mat-mdc-header-cell {
+      border: none;
+      padding: 16px;
+    }
+  }
+
+  .top-orgs-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // Animated progress bars
+  .progress-bar {
+    transition: width 1s ease-in-out;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  }
+
+  // Live indicator pulse
+  @keyframes pulse-live {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+  }
+
+  .live-indicator {
+    animation: pulse-live 2s infinite;
+  }
+
+  // Enhanced animations for real-time updates
+  .realtime-update {
+    animation: pulse 0.5s ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
+// Override Material Design styles
+::ng-deep {
+  .mat-mdc-card {
+    --mdc-elevated-card-container-elevation: none;
+    
+    .mat-mdc-card-header {
+      padding: 20px 24px 16px 24px;
+      
+      .mat-mdc-card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      
+      .mat-mdc-card-subtitle {
+        margin-top: 4px;
+        opacity: 0.7;
+      }
+    }
+    
+    .mat-mdc-card-content {
+      padding: 0 24px 24px 24px;
+    }
+  }
+
+  // Chart.js responsive improvements
+  .chart-container {
+    canvas {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  }
+
+  // Table improvements
+  .mat-mdc-table {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  // Button improvements
+  .mat-mdc-icon-button {
+    border-radius: 8px;
+  }
+
+  // Icon improvements
+  .mat-icon {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}

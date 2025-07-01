@@ -1,7 +1,7 @@
-<div class="flex flex-auto">
+<div class="flex flex-auto" [@slideInFromRight]>
     <div class="flex flex-col flex-auto p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
         <!-- Header -->
-        <div class="flex items-center justify-between -mt-3 -ml-4">
+        <div class="flex items-center justify-between -mt-3 -ml-4" [@fadeInUp]>
             <div class="pr-4 pl-3">
                 <h1 class="text-2xl font-semibold">{{ isEdit ? 'แก้ไขสมาชิก' : 'สร้างสมาชิก' }}</h1>
             </div>
@@ -12,42 +12,42 @@
             </div>
         </div>
 
-        <mat-divider class="mt-2 mb-3"></mat-divider>
+        <mat-divider class="mt-2 mb-3" [@fadeInUp]></mat-divider>
 
         <ng-container *ngIf="initForm">
-            <form [formGroup]="initForm">
+            <form [formGroup]="initForm" [@fadeInUp]>
                 <div class="flex flex-col gap-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- ฟิลด์ Member ID -->
-                        <div>
+                        <div class="fade-in-item">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">
                                 <mat-label>Member ID</mat-label>
                                 <input matInput placeholder="ระบุ Member ID" formControlName="memberid">
                             </mat-form-field>
                         </div>
                         <!-- ฟิลด์ ID Card -->
-                        <div>
+                        <div class="fade-in-item">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">
                                 <mat-label>ID Card</mat-label>
                                 <input matInput placeholder="ระบุเลขบัตรประชาชน" formControlName="idCard">
                             </mat-form-field>
                         </div>
                         <!-- ฟิลด์ Organization -->
-                        <div>
+                        <div class="fade-in-item">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">
                                 <mat-label>Organization</mat-label>
                                 <input matInput placeholder="ระบุหน่วยงาน" formControlName="organization">
                             </mat-form-field>
                         </div>
                         <!-- ฟิลด์ Contact Person -->
-                        <div>
+                        <div class="fade-in-item">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">
                                 <mat-label>Contact Person</mat-label>
                                 <input matInput placeholder="ระบุชื่อผู้ติดต่อ" formControlName="contactPerson">
                             </mat-form-field>
                         </div>
                         <!-- ฟิลด์ Contact Phone -->
-                        <div>
+                        <div class="fade-in-item">
                             <mat-form-field class="w-full" subscriptSizing="dynamic">
                                 <mat-label>Contact Phone</mat-label>
                                 <input matInput placeholder="ระบุเบอร์โทร" formControlName="contactPhone">
@@ -56,9 +56,9 @@
                     </div>
                 </div>
 
-                <mat-divider></mat-divider>
+                <mat-divider [@fadeInUp]></mat-divider>
 
-                <div class="flex items-center justify-end p-4 gap-x-4">
+                <div class="flex items-center justify-end p-4 gap-x-4" [@fadeInUp]>
                     <button mat-button type="button" (click)="onClose()" name="cancel">
                         ยกเลิก
                     </button>

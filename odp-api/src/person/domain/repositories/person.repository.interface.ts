@@ -10,6 +10,9 @@ export interface PersonRepositoryInterface {
   // ค้นหาโดยใช้ Name
   findByName(name: string): Promise<PersonEntity | null>;
 
+  // ค้นหาโดยใช้ชื่อและนามสกุล (สำหรับ LINE API)
+  findByNameAndSurname(name: string, surname: string): Promise<PersonEntity[]>;
+
   // ดึงข้อมูลทั้งหมด (แบบแบ่งหน้า)
   findAllPaginated(
     page: number,

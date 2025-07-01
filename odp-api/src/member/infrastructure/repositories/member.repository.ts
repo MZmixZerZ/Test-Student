@@ -31,6 +31,29 @@ export class MemberRepository implements MemberRepositoryInterface {
     return member ? this.mapToEntity(member) : null;
   }
 
+  async findByContactPersonName(name: string, surname: string): Promise<MemberEntity[]> {
+    // ค้นหาจากชื่อผู้ติดต่อ รองรับทั้งการค้นหาแยกและรวมกัน
+    const searchQueries = [];
+    
+    // ค้นหาจากชื่อเต็ม (ชื่อ + นามสกุล)
+    const fullName = `${name} ${surname}`;
+    searchQueries.push({ contactPerson: { $regex: CommonUtil.escapeRegExp(fullName), $options: 'i' } });
+    
+    // ค้นหาจากชื่อเดี่ยว
+    searchQueries.push({ contactPerson: { $regex: CommonUtil.escapeRegExp(name), $options: 'i' } });
+    
+    // ค้นหาจากนามสกุลเดี่ยว (ถ้ามี)
+    if (surname) {
+      searchQueries.push({ contactPerson: { $regex: CommonUtil.escapeRegExp(surname), $options: 'i' } });
+    }
+
+    const members = await this.memberModel
+      .find({ $or: searchQueries })
+      .exec();
+    
+    return members.map((m) => this.mapToEntity(m));
+  }
+
   async findAllPaginated(
     page: number,
     limit: number,
@@ -75,6 +98,11 @@ export class MemberRepository implements MemberRepositoryInterface {
 
   async count(): Promise<number> {
     return this.memberModel.countDocuments().exec();
+  }
+
+  async findAll(): Promise<MemberEntity[]> {
+    const members = await this.memberModel.find().exec();
+    return members.map((m) => this.mapToEntity(m));
   }
 
   async update(member: MemberEntity): Promise<MemberEntity> {

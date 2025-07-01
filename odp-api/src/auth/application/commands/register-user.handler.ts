@@ -46,7 +46,7 @@ export class RegisterUserHandler
 
       return this.authService.generateJwtToken(user);
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error instanceof Error ? error.message : 'Registration failed');
     }
   }
 }

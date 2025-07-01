@@ -10,6 +10,12 @@ export interface MemberRepositoryInterface {
   // ค้นหาโดยใช้ Name
   findByName(name: string): Promise<MemberEntity | null>;
 
+  // ค้นหาโดยใช้ชื่อ-นามสกุลของผู้ติดต่อ
+  findByContactPersonName(name: string, surname: string): Promise<MemberEntity[]>;
+
+  // ดึงข้อมูลทั้งหมด (ไม่แบ่งหน้า)
+  findAll(): Promise<MemberEntity[]>;
+
   // ดึงข้อมูลทั้งหมด (แบบแบ่งหน้า)
   findAllPaginated(
     page: number,

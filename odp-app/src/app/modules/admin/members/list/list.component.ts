@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -56,6 +57,23 @@ import { EditMemberComponent } from '../edit/edit.component';
     ],
     templateUrl: './list.component.html',
     styleUrl: './list.component.scss',
+    animations: [
+        trigger('slideIn', [
+            transition(':enter', [
+                style({ transform: 'translateX(100%)', opacity: 0 }),
+                animate('350ms ease-in-out', style({ transform: 'translateX(0%)', opacity: 1 }))
+            ]),
+            transition(':leave', [
+                animate('350ms ease-in-out', style({ transform: 'translateX(100%)', opacity: 0 }))
+            ])
+        ]),
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: 0, transform: 'scale(0.95)' }),
+                animate('200ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+            ])
+        ])
+    ]
 })
 export class MemberListComponent implements OnInit {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;

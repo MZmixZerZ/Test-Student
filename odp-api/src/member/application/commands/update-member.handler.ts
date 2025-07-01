@@ -1,17 +1,17 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateMemberCommand } from './update-member.command';
 import { MemberRepositoryInterface } from '../../domain/repositories/member.repository.interface';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ResponseDto } from 'src/common/presentation/dtos/response.dto';
 import { MemberEntity } from 'src/member/domain/entities/member.entity';
+import { MemberRepository } from '../../infrastructure/repositories/member.repository';
 
 @CommandHandler(UpdateMemberCommand)
 export class UpdateMemberHandler
   implements ICommandHandler<UpdateMemberCommand>
 {
   constructor(
-    @Inject('MemberRepository')
-    private readonly memberRepository: MemberRepositoryInterface,
+    private readonly memberRepository: MemberRepository,
   ) {}
 
   async execute(command: UpdateMemberCommand): Promise<ResponseDto<MemberEntity>> {

@@ -18,8 +18,10 @@
 
 
                     <div class="w-auto">
-                        <button mat-flat-button color="accent" class="rounded-lg py-2 px-6 font-bold"
-                            (click)="onOpenCreate()">
+                        <button mat-flat-button color="accent" 
+                                class="add-button rounded-lg py-2 px-6 font-bold"
+                                (click)="onOpenCreate()" 
+                                [@fadeIn]>
                             <mat-icon>add</mat-icon>เพิ่มข้อมูล
                         </button>
                     </div>
@@ -28,7 +30,7 @@
             <mat-divider></mat-divider>
 
             <ng-container *ngIf="members$ | async as memberResp">
-                <div class="sm:overflow-visible overflow-x-auto w-full">
+                <div class="sm:overflow-visible overflow-x-auto w-full table-container" [@fadeIn]>
                     <app-table-member [memberResp]="memberResp" (edit)="onEditMember($event)"
                         (delete)="onDeleteMember($event)">
                     </app-table-member>
