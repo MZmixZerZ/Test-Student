@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError, catchError } from 'rxjs';
 import { Dashboard, DashboardPagination } from './dashboards.types';
 
 @Injectable({providedIn: 'root'})
@@ -208,7 +208,13 @@ export class DashboardsService
      */
     getSummary(): Observable<{ member: number, org: number, person: number }>
     {
-        return this._httpClient.get<{ member: number, org: number, person: number }>('/api/dashboard/summary');
+        // Use the new backend dashboard summary endpoint
+        return this._httpClient.get<{ member: number, org: number, person: number }>('/api/dashboard/summary').pipe(
+            catchError(error => {
+                console.error('Error fetching dashboard summary:', error);
+                return of({ member: 0, org: 0, person: 0 });
+            })
+        );
     }
 
     /**

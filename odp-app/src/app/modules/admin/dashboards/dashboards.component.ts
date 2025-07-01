@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -22,19 +22,36 @@ export class DashboardsComponent implements OnInit {
   /**
      * Constructor
      */
-    constructor(private _dashboardsService: DashboardsService)
+    constructor(
+        private _dashboardsService: DashboardsService,
+        private _cdr: ChangeDetectorRef
+    )
     {
     }
 
     ngOnInit(): void {
       // ดึงข้อมูล summary
-      this._dashboardsService.getSummary().subscribe(res => {
-        this.summary = res;
+      this._dashboardsService.getSummary().subscribe({
+        next: (res) => {
+          this.summary = res;
+          this._cdr.detectChanges(); // Trigger change detection
+        },
+        error: (error) => {
+          console.error('Error loading summary:', error);
+          this._cdr.detectChanges();
+        }
       });
 
       // ดึงข้อมูล dashboards
-      this._dashboardsService.getDashboards().subscribe(res => {
-        this.dashboards = res.dashboards;
+      this._dashboardsService.getDashboards().subscribe({
+        next: (res) => {
+          this.dashboards = res.dashboards;
+          this._cdr.detectChanges(); // Trigger change detection
+        },
+        error: (error) => {
+          console.error('Error loading dashboards:', error);
+          this._cdr.detectChanges();
+        }
       });
     }
 }

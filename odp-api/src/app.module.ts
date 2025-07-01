@@ -9,6 +9,7 @@ import { PersonModule } from './person/person.module';
 import { LineController } from './line/line.controller';
 import { LineService } from './line/line.service';
 import { MemberModule } from './member/member.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 dotenv.config(); // โหลดตัวแปรจากไฟล์ .env ก่อน
 
@@ -23,6 +24,7 @@ dotenv.config(); // โหลดตัวแปรจากไฟล์ .env ก
     AuthModule,
     PersonModule, // ต้อง import PersonModule เพื่อให้ LineService ใช้ PersonRepository ได้
     MemberModule, // ต้อง import MemberModule เพื่อให้ LineService ใช้ MemberRepository ได้
+    DashboardModule, // Add dashboard module
   ],
   controllers: [
     LineController,
