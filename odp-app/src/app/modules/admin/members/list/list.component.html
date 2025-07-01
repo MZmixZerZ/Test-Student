@@ -1,8 +1,8 @@
 <div class="absolute inset-0 flex overflow-hidden">
     <mat-drawer-container class="bg-card h-full flex-auto dark:bg-transparent">
         <!-- Drawer -->
-        <mat-drawer class="w-full dark:bg-gray-900 md:w-160" [mode]="drawerMode" [opened]="false" [position]="'end'"
-            [disableClose]="true" #matDrawer>
+        <mat-drawer class="w-full dark:bg-gray-900 md:w-160" [mode]="drawerMode" [opened]="drawerOpened"
+            [position]="'end'" [disableClose]="true" #matDrawer>
             <app-edit-member></app-edit-member>
         </mat-drawer>
 
@@ -15,12 +15,12 @@
                 </div>
 
                 <div class="flex flex-auto items-center justify-end gap-x-2">
-                
+
 
                     <div class="w-auto">
-                        <button mat-flat-button class="ml-4 w-auto bg-[#22c55e] rounded-lg text-white"
-                            (click)="onOpenCreate()" name="create_user">
-                            <span class="ml-2 mr-1">เพิ่มข้อมูล</span>
+                        <button mat-flat-button color="accent" class="rounded-lg py-2 px-6 font-bold"
+                            (click)="onOpenCreate()">
+                            <mat-icon>add</mat-icon>เพิ่มข้อมูล
                         </button>
                     </div>
                 </div>
@@ -29,13 +29,13 @@
 
             <ng-container *ngIf="members$ | async as memberResp">
                 <div class="sm:overflow-visible overflow-x-auto w-full">
-                    <app-table-member 
-                        [memberResp]="memberResp" 
-                        (edit)="onEdit($event)" 
-                        (delete)="onDelete($event)"
-                        (updateStatus)="onUpdateStatus($event)"
-                        (changePage)="onChangePage($event)">
+                    <app-table-member [memberResp]="memberResp" (edit)="onEditMember($event)"
+                        (delete)="onDeleteMember($event)">
                     </app-table-member>
+
+                    <edit-member-component *ngIf="isEditDrawerOpen" [member]="selectedMember"
+                        (close)="isEditDrawerOpen = false">
+                    </edit-member-component>
                 </div>
             </ng-container>
         </mat-drawer-content>

@@ -1,34 +1,49 @@
 <div class="flex w-full flex-auto flex-col">
     <div class="mx-auto flex w-full max-w-screen-xl flex-wrap p-6 md:p-8">
-        <!-- Title and action buttons -->
-        <div class="flex w-full items-center justify-between">
-            <div>
-                <h2 class="text-3xl font-semibold leading-8 tracking-tight">
-                    System dashboard
-                </h2>
-                <div class="text-secondary font-medium tracking-tight">
-                    Keep track of your tasks and transactions
-                </div>
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <mat-icon color="primary" fontSize="40">group</mat-icon>
+                <div class="text-lg font-semibold mt-2">สมาชิกทั้งหมด</div>
+                <div class="text-2xl font-bold text-blue-700 mt-1">{{ summary.member }}</div>
             </div>
-            <div class="ml-6 flex items-center">
-
-                
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <mat-icon color="accent" fontSize="40">business</mat-icon>
+                <div class="text-lg font-semibold mt-2">องค์กร</div>
+                <div class="text-2xl font-bold text-green-700 mt-1">{{ summary.org }}</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <mat-icon color="warn" fontSize="40">person</mat-icon>
+                <div class="text-lg font-semibold mt-2">บุคคล</div>
+                <div class="text-2xl font-bold text-red-700 mt-1">{{ summary.person }}</div>
             </div>
         </div>
 
-        <div class="mt-8 grid w-full grid-cols-1 gap-8 xl:grid-cols-2">
-            <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
-                <!-- Previous statement -->
-                
-                <!-- Current statement -->
-                
+        <!-- Dashboards Table -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-xl font-semibold">รายการ Dashboard</div>
+                <button mat-stroked-button color="primary">ดูทั้งหมด</button>
             </div>
-            
-        </div>
-
-        <div class="mt-8 grid w-full grid-cols-1 gap-8 xl:grid-cols-3">
-            <!-- Recent transactions table -->
-            
+            <table mat-table [dataSource]="dashboards" class="mat-elevation-z8 w-full">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>ชื่อ Dashboard</th>
+                    <td mat-cell *matCellDef="let dashboard">{{ dashboard.name }}</td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>การกระทำ</th>
+                    <td mat-cell *matCellDef="let dashboard">
+                        <button mat-icon-button color="primary">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
         </div>
     </div>
 </div>

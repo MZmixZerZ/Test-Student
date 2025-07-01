@@ -155,14 +155,14 @@ export class EditPersonComponent implements OnInit {
             });
     }
 
-    onClose() {
-        this._router.navigate(['../'], { relativeTo: this._route });
+    onClose(): void {
+        this._router.navigateByUrl('/persons');
     }
 
-    closeDrawer(): Promise<void> {
-        // ถ้าไม่มี logic อื่น ให้ return Promise.resolve();
-        return Promise.resolve();
-    }
+    // closeDrawer(): Promise<void> {
+    //     // ถ้าไม่มี logic อื่น ให้ return Promise.resolve();
+    //     return Promise.resolve();
+    // }
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
