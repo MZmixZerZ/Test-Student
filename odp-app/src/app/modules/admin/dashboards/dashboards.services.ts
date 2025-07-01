@@ -14,9 +14,7 @@ export class DashboardsService
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
-    {
-    }
+    constructor(private _httpClient: HttpClient) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -204,4 +202,20 @@ export class DashboardsService
             )),
         );
     }    
+
+    /**
+     * Get summary
+     */
+    getSummary(): Observable<{ member: number, org: number, person: number }>
+    {
+        return this._httpClient.get<{ member: number, org: number, person: number }>('/api/dashboard/summary');
+    }
+
+    /**
+     * Get dashboards
+     */
+    getDashboardsList(): Observable<any[]>
+    {
+        return this._httpClient.get<any[]>('/api/dashboard/list');
+    }
 }

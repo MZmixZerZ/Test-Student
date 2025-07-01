@@ -14,7 +14,7 @@
             <div
                 class="mt-8 text-4xl font-extrabold leading-tight tracking-tight"
             >
-            สร้างบัญชีบริษัท
+            สร้างบัญชี
             </div>
             <div class="mt-0.5 flex items-baseline font-medium">
                 <div>มีบัญชีอยู่แล้ว?</div>
@@ -42,7 +42,7 @@
             <form class="mt-8" [formGroup]="signUpForm" #signUpNgForm="ngForm">
                 <!-- Name field -->
                 <mat-form-field class="w-full">
-                    <mat-label>ชื่อ-นามสกุล (ผู้ดูแลระบบ/เจ้าของบริษัท)</mat-label>
+                    <mat-label>ชื่อ-นามสกุล (ผู้ดูแลระบบ)</mat-label>
                     <input id="fullName" matInput [formControlName]="'fullName'" />
                     @if (signUpForm.get('fullName').hasError('required')) {
                         <mat-error> โปรดกรอก ชื่อ-นามสกุล </mat-error>
@@ -101,27 +101,27 @@
 
                 <!-- Company field -->
                 <mat-form-field class="w-full">
-                    <mat-label>ชื่อบริษัท/นิติบุคคล</mat-label>
+                    <mat-label>ชื่อสถานศึกษา</mat-label>
                     <input
                         id="company-confirm"
                         matInput
                         [formControlName]="'companyName'"
                     />
                     @if (signUpForm.get('companyName').hasError('required')) {
-                        <mat-error> โปรดกรอก ชื่อบริษัท/นิติบุคคล </mat-error>
+                        <mat-error> โปรดกรอก ชื่อสถานศึกษา </mat-error>
                     }
                 </mat-form-field>
 
                 <!-- Tax ID field -->
                 <mat-form-field class="w-full">
-                    <mat-label>หมายเลขทะเบียนบริษัท</mat-label>
+                    <mat-label>หมายเลขสถานศึกษา</mat-label>
                     <input
                         id="registrationId-confirm"
                         matInput
                         [formControlName]="'companyRegisterNo'"
                     />
                     @if (signUpForm.get('companyRegisterNo').hasError('required')) {
-                        <mat-error> โปรดกรอก หมายเลขทะเบียนบริษัท </mat-error>
+                        <mat-error> โปรดกรอก หมายเลขสถานศึกษา </mat-error>
                     }
                 </mat-form-field>
 
@@ -156,7 +156,7 @@
                     (click)="signUp()"
                 >
                     @if (!signUpForm.disabled) {
-                        <span> สร้างบัญชีบริษัท </span>
+                        <span> สร้างบัญชี </span>
                     }
                     @if (signUpForm.disabled) {
                         <mat-progress-spinner
